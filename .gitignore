@@ -1,0 +1,10 @@
+/Library
+/ProjectSettings
+/Res
+/Temp
+/UnityPackageManager
+/export
+/obj
+/.vs
+*.csproj
+*.sln
