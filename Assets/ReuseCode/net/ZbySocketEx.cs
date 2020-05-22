@@ -51,13 +51,22 @@ namespace Zby
 		
 		private string        _host;
 		private int           _port;
+       
 
         private int         _disReason;
         private string      _err;
 
 		private bool disposed = false;
 
+        private int _connectTimeout = 5;
+        public int ConnectTimeout
+        {
+            set { _connectTimeout = value; }
+        }
+        private float _startConnectTime;
+
         int _tryDisconnect = 0;
+
 
         RecvMsg _curRecvMsg;
         Queue<RecvMsg> _resvMsgQueue; //消息队列
@@ -106,6 +115,7 @@ namespace Zby
                 throw new Exception("state err" + netWorkState.ToString());
             }
 
+            _startConnectTime = Time.realtimeSinceStartup;
             netWorkState = NetWorkState.CONNECTING;
             _mb.StartCoroutine(_AutoUpdate());
 
@@ -179,7 +189,14 @@ namespace Zby
             }
             ZLog.I(_mb, "{0}:{1} exit loop", _host, _port);
         }
-
+        void CheckTimeOut()
+        {
+            if ( Time.realtimeSinceStartup - _startConnectTime > _connectTimeout)
+            {
+                ZLog.I(_mb, "connect timeout");
+                OnDisconnect(9, "connect timeout");
+            }
+        }
         public bool Update()
         {
             bool goon = true;
@@ -190,6 +207,7 @@ namespace Zby
                     //goon = false;
                     break;
                 case NetWorkState.CONNECTING:
+                    CheckTimeOut();
                     break;
                 case NetWorkState.CONNECTED:
                     HandleConnect();
@@ -291,6 +309,13 @@ namespace Zby
                         err = string.Format("too max sz {0} allow {1}", bodyLen, _protocol.GetMaxSize());
                         ZLog.E(_mb, err);
                         break;
+                    }else if(bodyLen == 0){
+                        lock (_resvMsgQueue)
+                        {
+                            _resvMsgQueue.Enqueue(_curRecvMsg);
+                        }
+                        this.StartRecvHeader();
+                        break;
                     }
                     _curRecvMsg._bodyPack = new MessagePacket(bodyLen);
                     socket.BeginReceive(this._curRecvMsg._bodyPack._buffer, 0, bodyLen, 0, new AsyncCallback(Callback_ReceiveBodyOK), this._curRecvMsg._bodyPack);
@@ -357,13 +382,9 @@ namespace Zby
 
         }
         
-
         private void sendCallback(IAsyncResult asyncSend)
         {
 			SendMsg sendBuff = asyncSend.AsyncState as SendMsg; 
-			//sendBuff._SendOkTime = System.DateTime.Now; 
-          
-
 			socket.EndSend (asyncSend);
             if (this.netWorkState != NetWorkState.Running) {
 				this._isSending = false;
@@ -379,7 +400,6 @@ namespace Zby
                 else
                 {
                     sendBuff = this._sendQueue.Dequeue();
-                    ///sendBuff._dequeTime = System.DateTime.Now;
                     byte[] thisSend = sendBuff.GetSendBuff();
 					socket.BeginSend(thisSend, 0, thisSend.Length, SocketFlags.None, new AsyncCallback(sendCallback), sendBuff);
                 }
@@ -391,7 +411,6 @@ namespace Zby
             return this.netWorkState == NetWorkState.Running;
         }
 
-      
         public bool Send( SendMsg buffer) 
         {
             bool ret = false;
@@ -447,13 +466,8 @@ namespace Zby
             }
             	
         }
-        /*
-        public void Close()
-        {
-            Dispose();
-            OnDisconnect(8, "user close socket");
-        }*/
-        
+  
+      
         public void Close(bool bSync = true)
         {
             if (socket != null)
@@ -480,42 +494,7 @@ namespace Zby
                         }
                     }
                 }
-            }
-           
-            
-            /*
-            if (OSTools.InEditor())
-            {
-                if (socket != null)
-                {
-                    if (socket.Connected)
-                    {
-                        if (bSync)
-                        {
-                            socket.Disconnect(true);
-                        }
-                        else
-                        {
-                            try
-                            {
-                                var args = new SocketAsyncEventArgs();
-                                socket.DisconnectAsync(args);
-                            }
-                            catch (Exception e)
-                            {
-                                socket.Disconnect(true);
-                                ZLog.E(null, "Close err {0}", e.ToString());
-                            }
-                        }
-                    }
-                }
-            }
-            else
-            {
-                Dispose();
-                OnDisconnect(8, "user close socket");
-
-            }*/
+            } 
         }
         
         /// <summary>

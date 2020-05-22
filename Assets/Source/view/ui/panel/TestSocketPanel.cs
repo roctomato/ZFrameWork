@@ -51,7 +51,7 @@ public class TestSocketPanel : CnViewBase
     void ClickBtnConnet(object[] args)
     {
         ZLog.D(this, "click connect args {0}", args[0]);   
-        _socket.Connect("192.168.11.50", 50008);
+        _socket.Connect("192.168.0.159", 7777);
     }
 
     //
