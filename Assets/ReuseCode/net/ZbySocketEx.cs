@@ -59,7 +59,7 @@ namespace Zby
 		private bool disposed = false;
 
         private int _connectTimeout = 5;
-        public int ConnectTimeout
+        public int ConnectTimeout //连接超时设置
         {
             set { _connectTimeout = value; }
         }
