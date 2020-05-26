@@ -56,6 +56,7 @@ public class TestWebSocket : CnViewBase, WebSocketHandler
         ZLog.I(this, "connect {0}", url);
         _component._text.text = "connected "+ url;
         _ws.SendText("hello world");
+        throw new Exception("handler null");
     }
     public bool OnTxtMsg(string text, int handle_count)
     {

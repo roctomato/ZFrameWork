@@ -1,4 +1,4 @@
-﻿
+﻿using System;
 using UnityEngine.UI;
 using Zby;
 
@@ -30,6 +30,7 @@ public class TestSocketPanel : CnViewBase
     void OnConnetEvent()
     {
         _component._text.text = "connect ok";
+        //throw new Exception("handler null");
     }
     void OnDisconnectEvent(int reason, string str)
     {
@@ -51,7 +52,7 @@ public class TestSocketPanel : CnViewBase
     void ClickBtnConnet(object[] args)
     {
         ZLog.D(this, "click connect args {0}", args[0]);   
-        _socket.Connect("192.168.0.159", 7777);
+        _socket.Connect("192.168.0.158", 50008);
     }
 
     //

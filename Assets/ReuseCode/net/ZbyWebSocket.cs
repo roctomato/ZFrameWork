@@ -272,7 +272,13 @@ namespace Zby
             bool running = true;
             while (running)
             {
-                running = Update();
+                try
+                {
+                    running = Update();
+                }catch(Exception e)
+                {
+                    ZLog.E(_mb,"{0}", e);
+                }
                 yield return 1;
             }
             ZLog.I(_mb, "{0} exit loop", _url);
