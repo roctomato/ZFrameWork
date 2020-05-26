@@ -4,6 +4,8 @@ using Zby;
 
 public class TestSocketPanel : CnViewBase
 {
+    string Host;
+    int Port;
     Chat_Socket     _socket;
 
     Panel_component _component;
@@ -52,7 +54,7 @@ public class TestSocketPanel : CnViewBase
     void ClickBtnConnet(object[] args)
     {
         ZLog.D(this, "click connect args {0}", args[0]);   
-        _socket.Connect("192.168.0.158", 50008);
+        _socket.Connect(Host, Port);
     }
 
     //
@@ -66,7 +68,9 @@ public class TestSocketPanel : CnViewBase
     }
     public override void OnLoad(params object[] args) 
     {
-        ZLog.D(this, "onload order {0}", this._zOrder);
+        ZLog.D(this, "onload order {0} ip {1}:{2}", this._zOrder, args[0], args[1]);
+        Host = args[0] as String;
+        Port = (int)args[1];
     }
     public override bool OnUnload() {
         ZLog.D(this, "onunload order {0}", this._zOrder);

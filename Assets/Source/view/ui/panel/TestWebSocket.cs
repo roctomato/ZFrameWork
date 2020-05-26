@@ -9,7 +9,7 @@ public class TestWebSocket : CnViewBase, WebSocketHandler
 {
     Panel_component _component;
     ZbyWebSocket _ws;
-
+    string _url;
     // Use this for initialization
     void Start () {
         ZLog.D(this, "start socket order {0}", this._zOrder);
@@ -39,7 +39,7 @@ public class TestWebSocket : CnViewBase, WebSocketHandler
     void ClickBtnConnet(object[] args)
     {
         ZLog.D(this, "click connect args {0}", args[0]);
-        _ws.Open("ws://localhost:8000/ws");
+        _ws.Open(_url);//"ws://localhost:8000/ws"
     }
     
     public override CnUiComponent GetCnUiComponent()
@@ -76,5 +76,12 @@ public class TestWebSocket : CnViewBase, WebSocketHandler
     public void OnDisconnect(int reason, string str)
     {
         ZLog.E(this, "disconnect [{0}] {1}", reason, str);
+    }
+
+    public override void OnLoad(params object[] args)
+    {
+        ZLog.D(this, "onload order {0} url {1}", this._zOrder, args[0]);
+        _url = args[0] as String;
+        
     }
 }

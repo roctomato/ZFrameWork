@@ -8,11 +8,13 @@ namespace Zby
 {
     public class MainEntry : MonoBehaviour
     {
+        MainEntryEvent  _mainEntryEvent;
+        /*
         //config
         public bool     _hasLogFile ;
         public string   _startClass ;
 
-        MainEntryEvent  _mainEntryEvent;
+       
         LogFile         _logFile;
 
         void InvokeAwake()
@@ -36,20 +38,21 @@ namespace Zby
                 ZLog.E(this, "Invoke {0}.Awake failed, reason {1}", _startClass, e.ToString());
             }
         }
-
+        */
         void Awake()
         {
             _mainEntryEvent = MainEntryEvent.Instance;
             _mainEntryEvent.SetMb(this);
 
+            /*
             if (_hasLogFile)
             {
                 _logFile = new LogFile();
             }
-
+            */
             ZLog.I(this, "OnAwake");
 
-            InvokeAwake();
+            //InvokeAwake();
 
             _mainEntryEvent.TriggerAwake();
         }
@@ -65,10 +68,11 @@ namespace Zby
         {
             ZLog.I(this, "OnQuit");
             _mainEntryEvent.TriggerQuit();
+            /*
             if ( _hasLogFile && _logFile != null)
             {
                 _logFile.Close();
-            }
+            }*/
         }
     }
 

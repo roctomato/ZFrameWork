@@ -32,6 +32,18 @@ namespace Zby
             _appMb = mb;
         }
 
+        LogFile _logFile = null;
+
+        public void Start( bool hasLogFile=true)
+        {
+            if (hasLogFile)
+            {
+                _logFile = new LogFile();
+            }
+            GameObject go = new GameObject("MainEntry");
+            go.AddComponent<MainEntry>();
+        }
+
         public void TriggerAwake()
         {
             if(OnAwake != null )
@@ -48,6 +60,11 @@ namespace Zby
         {
             if (OnQuit != null)
                 OnQuit();
+
+            if ( _logFile != null)
+            {
+                _logFile.Close();
+            }
         }
     }
 }

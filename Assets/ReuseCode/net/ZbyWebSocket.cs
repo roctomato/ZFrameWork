@@ -50,6 +50,13 @@ namespace Zby
 
         private string _url;
 
+        private int _connectTimeout = 5;
+        public int ConnectTimeout //连接超时设置
+        {
+            set { _connectTimeout = value; }
+        }
+        private float _startConnectTime;
+
         bool _isSending = false;  //正在发送中	
         Queue<WsMsg> _sendQueue; //消息队列
         Queue<WsMsg> _resvMsgQueue; //消息队列
@@ -101,6 +108,8 @@ namespace Zby
             }
 
             netWorkState = NetWorkState.CONNECTING;
+            _startConnectTime = Time.realtimeSinceStartup;
+
             _mb.StartCoroutine(_AutoUpdate());
             this._webSocket = new WebSocket(_url);
             RegisterEvt(true);
@@ -318,6 +327,16 @@ namespace Zby
         {
             _handler.OnDisconnect(_disReason, _err);
             netWorkState = NetWorkState.CLOSED;
+        }
+        void CheckTimeOut()//超时暂时无法中止
+        {
+            if (Time.realtimeSinceStartup - _startConnectTime > _connectTimeout)
+            {
+                ZLog.I(_mb, "connect timeout");
+                _webSocket.CloseAsync(CloseStatusCode.NoStatus);
+                //Close();
+                //OnDisconnect(9, "connect timeout");
+            }
         }
         public bool Update()
         {
