@@ -179,13 +179,16 @@ namespace Zby
 
         protected void SetClickEventOnce(Button btn, Action<object[]> method, object[] args)
         {
-            if (btn == null)
+            if (btn == null){
+				ZLog.E(this, "btn null");
                 return;
+			}
             btn.onClick.RemoveAllListeners();
             btn.onClick.AddListener(() =>
             {
                 method(args);
             });
+			ZLog.D(this,"Add btn evt ok");
         }
         protected Transform GetChild(string childName)
         {
