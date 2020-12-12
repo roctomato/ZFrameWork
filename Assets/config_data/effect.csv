@@ -1,0 +1,5 @@
+int,string
+ID,Path
+索引,特效文件路径
+1,UI/OpenChesh
+2,UI/GetReward

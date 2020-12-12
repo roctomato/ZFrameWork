@@ -55,10 +55,13 @@ public class CheckPathPanel : CnViewBase
 		BinDataMgr mgr = new BinDataMgr();
         bool ret = mgr.LoadData( Application.dataPath+"/config_data/");
         Debug.Log("load ok");
-        
-        duoli.languageMgr dmgr = mgr._languageMgr;
-        
+        Debug.Log(mgr._languageMgr.FindData("UI_ReportTool_Calendar").Content);
 
+        ret = mgr.LoadCsvData(Application.dataPath+"/config_data/");
+
+        languageMgr dmgr = mgr._languageMgr;
+        //ret = dmgr.LoadDefaultCsv( Application.dataPath+"/config_data/");
+        Debug.Log(ret);
         Debug.Log(dmgr.FindData("UI_ReportTool_Calendar").Content);
     }
 }
