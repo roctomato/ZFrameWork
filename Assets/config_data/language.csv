@@ -1,0 +1,12 @@
+string,string
+Key,Content
+键值,中文
+UI_ReportTool_Calendar,日历共鸣：
+UI_ReportTool_FiveLabel,五行：
+UI_ReportTool_Week,星期
+UI_ReportTool_FiveAddition,五行克制加成：
+UI_ReportTool_NameLabel,名字：
+UI_ReportTool_LevelLabel,等级：
+UI_ReportTool_HPLabel,血量：
+UI_ReportTool_SkinLabel,皮肤加成：
+UI_ReportTool_EmBattle,阵型
