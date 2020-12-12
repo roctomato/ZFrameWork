@@ -32,7 +32,15 @@ namespace Zby
                 writer = new BinaryWriter(stream);
             }
         }
-
+        public ByteBuffer(Stream read_stream) {
+            if (read_stream != null) {
+                //stream = new MemoryStream(data);
+                reader = new BinaryReader(read_stream);
+            } else {
+                stream = new MemoryStream();
+                writer = new BinaryWriter(stream);
+            }
+        }
         public void Close()
         {
             if (writer != null) writer.Close();
