@@ -120,8 +120,8 @@ PrefabInstance:
     m_TransformParent: {fileID: 1842745392}
     m_Modifications:
     - target: {fileID: 1529319632805216, guid: c125039d5baa5c649bf296a42e78fe6e, type: 3}
-      propertyPath: m_IsActive
-      value: 0
+      propertyPath: m_Name
+      value: Panel
       objectReference: {fileID: 0}
     - target: {fileID: 224130436920174508, guid: c125039d5baa5c649bf296a42e78fe6e,
         type: 3}
@@ -161,6 +161,21 @@ PrefabInstance:
     - target: {fileID: 224130436920174508, guid: c125039d5baa5c649bf296a42e78fe6e,
         type: 3}
       propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 224130436920174508, guid: c125039d5baa5c649bf296a42e78fe6e,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 224130436920174508, guid: c125039d5baa5c649bf296a42e78fe6e,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 224130436920174508, guid: c125039d5baa5c649bf296a42e78fe6e,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 224130436920174508, guid: c125039d5baa5c649bf296a42e78fe6e,
@@ -687,6 +702,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: FightPanel
+      objectReference: {fileID: 0}
+    - target: {fileID: 6374904929776963285, guid: ee54a57a43c726d419aeef028848d2de,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6374904929776963282, guid: ee54a57a43c726d419aeef028848d2de,
         type: 3}

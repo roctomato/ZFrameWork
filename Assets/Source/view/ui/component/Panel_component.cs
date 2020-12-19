@@ -6,6 +6,8 @@ public class Panel_component: CnUiComponent
     public Button _btn1;
     public Button _btn2;
     public Text _text;
+    public Button _btn3;
+    public Button _btn4;
 
     public override bool DoInit()
     {
@@ -23,6 +25,20 @@ public class Panel_component: CnUiComponent
             if (null == _btn2)
             {
                 ZLog.E(Trans, "no Btn2");
+                break;
+            }
+
+            _btn3 = GetElement<Button>("Btn3");
+            if (null == _btn2)
+            {
+                ZLog.E(Trans, "no Btn3");
+                break;
+            }
+
+            _btn4 = GetElement<Button>("Btn4");
+            if (null == _btn2)
+            {
+                ZLog.E(Trans, "no Btn4");
                 break;
             }
 

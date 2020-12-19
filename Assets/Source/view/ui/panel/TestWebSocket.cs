@@ -21,6 +21,9 @@ public class TestWebSocket : CnViewBase, WebSocketHandler
         _component._btn2.transform.Find("Text").GetComponent<Text>().text = "disconnect";
         SetClickEventOnce(_component._btn2, ClickDisconnet, new object[] { "dis" });
 
+       _component._btn3.transform.Find("Text").GetComponent<Text>().text = "ping";
+        SetClickEventOnce(_component._btn3, ClickBtnSendPing, new object[] { "ping" });
+
         _component._text.text = "init";
 
         _ws = new ZbyWebSocket(this, this);
@@ -42,6 +45,11 @@ public class TestWebSocket : CnViewBase, WebSocketHandler
         _ws.Open(_url);//"ws://localhost:8000/ws"
     }
     
+    void ClickBtnSendPing(object[] args)
+    {
+        ZLog.D(this, "click connect args {0}", args[0]);
+        //_ws.ping();
+    }
     public override CnUiComponent GetCnUiComponent()
     {
         if (null == _component)

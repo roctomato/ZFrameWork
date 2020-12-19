@@ -14,7 +14,7 @@ namespace Zby
         bool OnRawMsg(byte[] msg, int handle_count);
 
         void OnErr(ErrorEventArgs e);
-        void OnDisconnect(int reason, string str); //¶Ï¿ªÁ¬½Ó»Øµ÷
+        void OnDisconnect(int reason, string str); //æ–­å¼€è¿æ¥å›è°ƒ
     }
 
     class WsMsg
@@ -51,15 +51,15 @@ namespace Zby
         private string _url;
 
         private int _connectTimeout = 5;
-        public int ConnectTimeout //Á¬½Ó³¬Ê±ÉèÖÃ
+        public int ConnectTimeout //è¿æ¥è¶…æ—¶è®¾ç½®
         {
             set { _connectTimeout = value; }
         }
         private float _startConnectTime;
 
-        bool _isSending = false;  //ÕıÔÚ·¢ËÍÖĞ	
-        Queue<WsMsg> _sendQueue; //ÏûÏ¢¶ÓÁĞ
-        Queue<WsMsg> _resvMsgQueue; //ÏûÏ¢¶ÓÁĞ
+        bool _isSending = false;  //æ­£åœ¨å‘é€ä¸­	
+        Queue<WsMsg> _sendQueue; //æ¶ˆæ¯é˜Ÿåˆ—
+        Queue<WsMsg> _resvMsgQueue; //æ¶ˆæ¯é˜Ÿåˆ—
 
         public ZbyWebSocket(WebSocketHandler handler, MonoBehaviour mb)
         {
@@ -188,7 +188,7 @@ namespace Zby
 
                 lock (_sendQueue)
                 {
-                    //·¢ËÍ¶ÓÁĞÎª¿Õ£¬ÇÒµ±Ç°²»ÔÚ·¢ËÍ¹ı³ÌÖĞ
+                    //å‘é€é˜Ÿåˆ—ä¸ºç©ºï¼Œä¸”å½“å‰ä¸åœ¨å‘é€è¿‡ç¨‹ä¸­
                     if (this._sendQueue.Count == 0 && !this._isSending)
                     {
                         thisSend = msg;
@@ -196,7 +196,7 @@ namespace Zby
                     else
                     {
                         this._sendQueue.Enqueue(msg);
-                        if (!this._isSending) // µ±Ç°Ã»ÔÚ·¢ËÍÔò¿ªÊ¼·¢ËÍ
+                        if (!this._isSending) // å½“å‰æ²¡åœ¨å‘é€åˆ™å¼€å§‹å‘é€
                         {
                             thisSend = this._sendQueue.Dequeue();
                         }
@@ -328,7 +328,7 @@ namespace Zby
             _handler.OnDisconnect(_disReason, _err);
             netWorkState = NetWorkState.CLOSED;
         }
-        void CheckTimeOut()//³¬Ê±ÔİÊ±ÎŞ·¨ÖĞÖ¹
+        void CheckTimeOut()//è¶…æ—¶æš‚æ—¶æ— æ³•ä¸­æ­¢
         {
             if (Time.realtimeSinceStartup - _startConnectTime > _connectTimeout)
             {
