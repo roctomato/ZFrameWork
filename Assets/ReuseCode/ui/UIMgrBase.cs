@@ -6,15 +6,24 @@ using UnityEngine;
 
 namespace Zby
 {
-    public class UIMgrBase : BaseCanvas, IViewMgr
+    public class UIMgrBase : /*BaseCanvas,*/ IViewMgr
     {
+        protected BaseCanvas _baseCanvas;
+        protected Canvas _thisCanvas;
         protected List<CnViewBase> _viewStack;
         protected HashSet<CnViewBase> _initViewSet;
 
         private int _viewID;
 
-        public UIMgrBase( string name):base(name)
+        public UIMgrBase( string name, bool asPath)/*:base(name)*/
         {
+            if ( asPath){
+                GameObject go = GameObject.Find(name);
+                _thisCanvas = go.GetComponent<Canvas>();
+            }else{
+                _baseCanvas = new BaseCanvas(name);
+                _thisCanvas = _baseCanvas.Main;
+            }
             _viewStack = new List<CnViewBase>();
             _initViewSet = new HashSet<CnViewBase>();
             _viewID = 0;
@@ -47,7 +56,7 @@ namespace Zby
                     break;
                 }
                 
-                ins.transform.SetParent(this._canvasHost.transform, false);
+                ins.transform.SetParent(this._thisCanvas.transform, false);
                 ins.transform.localPosition = Vector3.zero;
                 ins.transform.localScale = Vector3.one;
                 ins.transform.localRotation = Quaternion.identity;
@@ -126,7 +135,7 @@ namespace Zby
             }
             else
             {
-                ZLog.E(null, "{0} no view {1}_{2}", this.GetCanvasName(), view.GetName(), view.ZOrder);
+                ZLog.E(null, "{0} no view {1}_{2}", this._thisCanvas.name, view.GetName(), view.ZOrder);
             }
             return false;// this.IsTop(view);
         }
@@ -136,7 +145,7 @@ namespace Zby
             do{
                 if ( !this._initViewSet.Contains( view) )
                 {
-                    ZLog.E(null, "{0} no init view {1}_{2}", this.GetCanvasName(), view.GetName(), view.ZOrder);
+                    ZLog.E(null, "{0} no init view {1}_{2}", this._thisCanvas.name, view.GetName(), view.ZOrder);
                     break;
                 }
                 CnViewBase last_view = this.GetTopView();
