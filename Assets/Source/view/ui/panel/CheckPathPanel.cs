@@ -10,9 +10,15 @@ public class CheckPathPanel : CnViewBase
 {
     FightComponent _component;
 
+    void Awake()
+    {
+         ZLog.D(this,"awake");
+    }
+
     // Start is called before the first frame update
     void Start()
     {
+        ZLog.D(this,"start");
         StringBuilder sb = new StringBuilder();
         sb.AppendFormat("absoluteURL:{0}\n", Application.absoluteURL);
         sb.AppendFormat("dataPath:{0}\n", Application.dataPath);
