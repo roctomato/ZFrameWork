@@ -53,7 +53,7 @@ public class CheckPathPanel : CnViewBase
 	public override void OnLoad(params object[] args) 
     {
 
-        ZLog.D(this, "onload order {0}", this._zOrder);
+        ZLog.D(this, "onload order {0}", this.ZOrder);
 		
     }
     void ClickCall(object[] args)

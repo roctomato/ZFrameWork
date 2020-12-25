@@ -12,7 +12,7 @@ public class TestSocketPanel : CnViewBase
 
     // Use this for initialization
     void Start () {
-        ZLog.D(this, "start socket order {0}", this._zOrder);
+        ZLog.D(this, "start socket order {0}", this.ZOrder);
 
         _component._btn1.transform.Find("Text").GetComponent<Text>().text = "connect";
         SetClickEventOnce(_component._btn1, ClickBtnConnet, new object[] { "cnt" });
@@ -68,21 +68,21 @@ public class TestSocketPanel : CnViewBase
     }
     public override void OnLoad(params object[] args) 
     {
-        ZLog.D(this, "onload order {0} ip {1}:{2}", this._zOrder, args[0], args[1]);
+        ZLog.D(this, "onload order {0} ip {1}:{2}", this.ZOrder, args[0], args[1]);
         Host = args[0] as String;
         Port = (int)args[1];
     }
     public override bool OnUnload() {
-        ZLog.D(this, "onunload order {0}", this._zOrder);
+        ZLog.D(this, "onunload order {0}", this.ZOrder);
         return true;
     }
 
-    public override void OnBehind(CnViewBase topview) //从顶层移到后一层
+    public override void OnBehind(CnPanelObj topview) //从顶层移到后一层
     {
-        ZLog.D(this, "OnBehind order {0}", this._zOrder);
+        ZLog.D(this, "OnBehind order {0}", this.ZOrder);
     }
-    public override void OnTop(CnViewBase topview) //从后层变到顶层
+    public override void OnTop(CnPanelObj topview) //从后层变到顶层
     {
-        ZLog.D(this, "OnTop order {0}", this._zOrder);
+        ZLog.D(this, "OnTop order {0}", this.ZOrder);
     }  
 }

@@ -15,6 +15,7 @@ public class test1 : MonoBehaviour
         //    Debug.Log("This is a debug build!");
         ZLog.D(this, "hello");
         ZLog.D(this, "hello message");
+        CnUIMgr.Instance.LoadPanelShow<SimplePanel>("panel");
     }
 
     // Update is called once per frame

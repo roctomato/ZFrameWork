@@ -7,226 +7,75 @@ using UnityEngine.UI;
 
 namespace Zby
 {
-    public abstract class CnUiComponent
+    public class WrapperCnViewBase: CnPanelObj
     {
-        protected Transform Trans;
-        protected CnUiComponent()
-        {
-        }
+        CnViewBase  view;
 
-        protected Transform GetChild(string path)
+        public WrapperCnViewBase(CnViewBase  view)
         {
-            return Trans.Find(path);
+            this.view = view;
         }
-
-        protected T GetElement<T>(string path) where T : Component
+       
+        public override void InitArgs(int zOrder, GameObject go, IViewMgr mgr, params object[] args)
         {
-            var child = GetChild(path);
-            if (child == null)
-                return default(T);
-            return child.GetComponent<T>();
+            this.view.Host = this;
+            base.InitArgs(zOrder,go, mgr, args );
         }
-
-        protected Transform GetChild(Transform parent, string path)
-        {
-            return parent.Find(path);
-        }
-
-        protected T GetElement<T>(Transform parent, string path) where T : Component
-        {
-            var child = GetChild(parent, path);
-            if (child == null)
-                return default(T);
-            return child.GetComponent<T>();
-        }
-
-        public bool InitUiComponent(Transform trans)
-        {
-            Trans = trans;
-            return DoInit();
-        }
-
-        public virtual bool DoInit()
-        {
-            return false;
+        public override void OnLoad(params object[] args) { //创建时调用，会在start前调用
+            this.view.OnLoad( args);
         } 
-    }
-
-    public interface IViewMgr
-    {
-         bool CanUnload(CnViewBase view);
-         bool DestoryView(CnViewBase view);
-         bool DoShow(CnViewBase view);
+        public override bool OnUnload() { return  this.view.OnUnload(); } //移除前调用
+        public override void OnBehind(CnPanelObj topview ) {  this.view.OnBehind(topview);} //从顶层移到后一层
+        public override void OnTop(CnPanelObj topview) { this.view.OnTop(topview); }  //从后层变到顶层
+        public override void ViewEvtHandler(object sender, string event_cate, int event_type,object param) { //事件侦听
+            this.view.ViewEvtHandler( sender, event_cate, event_type, param );
+        }
+        public override CnUiComponent GetCnUiComponent() { return this.view.GetCnUiComponent(); }
     }
     public abstract class CnViewBase : MonoBehaviour
     {
-        protected GameObject _uiObj;
-        public GameObject UIObj { get { return _uiObj; } }
-
-        protected int _zOrder; //在ui栈中的打开的顺序
-        public int ZOrder { get { return _zOrder; } }
-
-        protected IViewMgr _viewMgr;
-        private HashSet<string> _evtSet;
-
-        public void InitArgs(int zOrder, GameObject go, IViewMgr mgr, params object[] args)
-        {
-            this._zOrder = zOrder;
-            this._uiObj = go;
-            this._viewMgr = mgr;
-            this._evtSet = new HashSet<string>();
-            //this.OnLoad(args);
-            
-            try
-            {
-                CnUiComponent comp = this.GetCnUiComponent();
-                if ( comp != null)
-                {
-                    bool ret = comp.InitUiComponent(this.transform);
-                    ZLog.I(this, "ui {0}  init compent {1}", this.GetName(), ret ?"ok":"failed");
-                }
-                else
-                {
-                    ZLog.I(this, "ui {0} no init compent", this.GetName());
-                }
-                this.OnLoad(args);
-            }catch( Exception e)
-            {
-                ZLog.E(this, " ui {0} OnLoad err {1}", this.GetName(), e.ToString());
-            }
+        WrapperCnViewBase _hostObj;
+        public WrapperCnViewBase Host{
+            get{ return _hostObj;}
+            set{ _hostObj = value; }
         }
+        
+        public GameObject UIObj { get { return _hostObj.UIObj; } }
+
+        public int ZOrder { get { return _hostObj.ZOrder; } }
+
         public string GetName()
         {
-            return _uiObj.name;
+            return _hostObj.GetName();
         }
         public void Hide(  )
         {
-            this._uiObj.SetActive(  false );
+            this._hostObj.Hide();
         }
         public bool Show()
         {
-            bool ret = this._viewMgr.DoShow(this);
-            if ( ret )
-            {
-                this._uiObj.SetActive(true);
-            }
-            return ret;
+            return _hostObj.Show();
         }
-
-       
-        public void AddChild( Transform child, bool active)
-        {
-            child.SetParent( _uiObj.transform, active);
-        }
-
 
         public bool DoUnload()
         {
-            bool ret = false;
-            do
-            {
-                if (!this._viewMgr.CanUnload(this))
-                {
-                    ZLog.E(this, " ui {0} order {1} can not unload by frame", this.GetName(), this.ZOrder);
-                    break;
-                }
-
-                if (!this.OnUnload())
-                {
-                    ZLog.E(this, " ui {0} order {1} can not unload by view", this.GetName(), this.ZOrder);
-                    break;
-                }
-
-                if (this._evtSet.Count > 0 )
-                {
-                    foreach( var evt_cate in _evtSet)
-                    {
-                        EventMgr.Instance.AddEvt(ViewEvtHandler, evt_cate, false);
-                    }
-                }
-                this._viewMgr.DestoryView(this);
-                ret = true;
-            } while (false);
-            
-            return ret;
+            return _hostObj.DoUnload();
         }
         public void RegisertEvt(string evt)
         {
-            do
-            {
-                if ( null == evt || evt.Length == 0)
-                {
-                    ZLog.E(null, "evt type err");
-                    break;
-                }
-
-                if (_evtSet.Contains(evt))
-                {
-                    ZLog.E(null, "evt {0} already register", evt);
-                    break;
-                }
-                EventMgr.Instance.AddEvt(ViewEvtHandler, evt, true);
-                _evtSet.Add(evt);
-            } while (false);
-            
+            _hostObj.RegisertEvt(evt);
         }
        
-        public void DoBring2Top(CnViewBase view )
-        {
-            this.OnTop(view );
-        }
-    
-
         protected void SetClickEventOnce(Button btn, Action<object[]> method, object[] args)
         {
-            if (btn == null){
-				ZLog.E(this, "btn null");
-                return;
-			}
-            btn.onClick.RemoveAllListeners();
-            btn.onClick.AddListener(() =>
-            {
-                method(args);
-            });
-			ZLog.D(this,"Add btn evt ok");
+            _hostObj.SetClickEventOnce( btn, method, args);
         }
-        protected Transform GetChild(string childName)
-        {
-            return GetChild(transform, childName);
-        }
-
-        protected Transform GetChild(Transform parent, string childName)
-        {
-            var res = parent.Find(childName);
-            if (res == null)
-                ZLog.E(this, string.Format("{0}不存在", childName));
-            return res;
-        }
-
-        protected T GetElement<T>(string childName) where T : Component
-        {
-            return GetElement<T>(transform, childName);
-        }
-
-        protected T GetElement<T>(Transform parent, string childName) where T : Component
-        {
-            var child = GetChild(parent, childName);
-            if (child)
-            {
-                var res = child.GetComponent<T>();
-                if (res == null)
-                {
-                    ZLog.E(this, string.Format("{1}不存在节点不存在{2}", childName, typeof(T).Name));
-                }
-                return res;
-            }
-            return null;
-        }
+      
         /// ////////////////////////////////
         public virtual void OnLoad(params object[] args) { } //创建时调用，会在start前调用
         public virtual bool OnUnload() { return true; } //移除前调用
-        public virtual void OnBehind(CnViewBase topview ) { } //从顶层移到后一层
-        public virtual void OnTop(CnViewBase topview) { }  //从后层变到顶层
+        public virtual void OnBehind(CnPanelObj topview ) { } //从顶层移到后一层
+        public virtual void OnTop(CnPanelObj topview) { }  //从后层变到顶层
         public virtual void ViewEvtHandler(object sender, string event_cate, int event_type,object param) { } //事件侦听
         public virtual CnUiComponent GetCnUiComponent() { return null; }
     }

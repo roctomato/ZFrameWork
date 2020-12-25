@@ -44,7 +44,7 @@ public class LuaMain : MonoBehaviour
 
     void OnApplicationQuit()
     {
-        //luaenv.Dispose();
+        luaenv.Dispose();
     }
     
 }

@@ -35,5 +35,9 @@ end
 --主入口函数。从这里开始lua逻辑
 function Main()
     log("from lua logic start.")
+
+    local ui_mgr = CS.LuaUIMgr.Create("myui",false)
+    ui_mgr:LoadPanel("panel", "test_panel", true, {'simple panel'})
+    ui_mgr:LoadPanel("panel", "test_panel", false, {'has monobahavor'})
     --test_class()
 end

@@ -7,7 +7,7 @@ public class loginscene : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        CnUIPathMgr.Instance.Load<TestPanel>("LoginGame", 10);
+        CnUIPathMgr.Instance.Load<TestPanel>("LoginGame", (float)10.0);
     }
 
     // Update is called once per frame

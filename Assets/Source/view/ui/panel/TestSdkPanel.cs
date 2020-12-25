@@ -11,7 +11,7 @@ public class TestSdkPanel : CnViewBase
 
     // Use this for initialization
     void Start () {
-        ZLog.D(this, "start order {0}", this._zOrder);
+        ZLog.D(this, "start order {0}", this.ZOrder);
         SetClickEventOnce(_component.btnCall, ClickCall, new object[] { "Call java" });
     }
 	
@@ -38,18 +38,18 @@ public class TestSdkPanel : CnViewBase
     //
     public override void OnLoad(params object[] args) 
     {
-        ZLog.D(this, "onload order {0}", this._zOrder);
+        ZLog.D(this, "onload order {0}", this.ZOrder);
     }
     public override bool OnUnload() {
-        ZLog.D(this, "onunload order {0}", this._zOrder);
+        ZLog.D(this, "onunload order {0}", this.ZOrder);
         return true;
     }
-    public override void OnBehind(CnViewBase topview) //从顶层移到后一层
+    public override void OnBehind(CnPanelObj topview) //从顶层移到后一层
     {
-        ZLog.D(this, "OnBehind order {0}", this._zOrder);
+        ZLog.D(this, "OnBehind order {0}", this.ZOrder);
     }
-    public override void OnTop(CnViewBase topview) //从后层变到顶层
+    public override void OnTop(CnPanelObj topview) //从后层变到顶层
     {
-        ZLog.D(this, "OnTop order {0}", this._zOrder);
+        ZLog.D(this, "OnTop order {0}", this.ZOrder);
     }  
 }

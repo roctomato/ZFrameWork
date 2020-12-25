@@ -10,8 +10,8 @@ namespace Zby
     {
         protected BaseCanvas _baseCanvas;
         protected Canvas _thisCanvas;
-        protected List<CnViewBase> _viewStack;
-        protected HashSet<CnViewBase> _initViewSet;
+        protected List<CnPanelObj> _viewStack;
+        protected HashSet<CnPanelObj> _initViewSet;
 
         private int _viewID;
 
@@ -24,32 +24,32 @@ namespace Zby
                 _baseCanvas = new BaseCanvas(name);
                 _thisCanvas = _baseCanvas.Main;
             }
-            _viewStack = new List<CnViewBase>();
-            _initViewSet = new HashSet<CnViewBase>();
+            _viewStack = new List<CnPanelObj>();
+            _initViewSet = new HashSet<CnPanelObj>();
             _viewID = 0;
         }
 
-        public CnViewBase GetTopView()
+        public CnPanelObj GetTopView()
         {
-            CnViewBase ret = null;
+            CnPanelObj ret = null;
             if (this._viewStack.Count > 0)
             {
                 ret = this._viewStack.Last();
             }
             return ret;
         }
-        public T Load<T>(string name, bool show, params object[] args) where T : CnViewBase
+        
+        GameObject InitRes(string name )
         {
-            T view = null;
-            do
-            {
+            GameObject ins = null;
+            do{
                 GameObject go = this.FindUIRes(name);
                 if (null == go)
                 {
                     ZLog.E(null, "no ui {0}", name);
                     break;
                 }
-                GameObject ins = GameObject.Instantiate(go) as GameObject;
+                ins =  GameObject.Instantiate(go) as GameObject;
                 if (ins == null)
                 {
                     ZLog.E(null, "{0} Instantiate fail", name);
@@ -62,24 +62,73 @@ namespace Zby
                 ins.transform.localRotation = Quaternion.identity;
                 ins.name = name;
                 ZLog.I(null, "Load{0} ok", name);
-                view = ins.AddComponent<T>();
-                if (view)
+            }while (false);
+            return ins;
+        }
+        public void InitNewPanel( CnPanelObj view,  GameObject ins, bool show, params object[] args )
+        {
+            view.InitArgs(_viewID, ins, this, args);
+            _viewID++;
+            if (show)
+            {
+                CnPanelObj last_view = this.GetTopView();
+                this._viewStack.Add(view);
+                if (last_view != null)
                 {
-                    view.InitArgs(_viewID, ins, this, args);
-                    _viewID++;
-                    if (show)
-                    {
-                        CnViewBase last_view = this.GetTopView();
-                        this._viewStack.Add(view);
-                        if (last_view)
-                        {
-                            last_view.OnBehind(view);
-                        }
-                    }
-                    else
-                    {
-                        this._initViewSet.Add(view);
-                        view.Hide();
+                    last_view.OnBehind(view);
+                }
+            }
+            else
+            {
+                this._initViewSet.Add(view);
+                view.Hide();
+            }
+        }
+        protected T LoadPanel<T>(string name, bool show, params object[] args) where T : CnPanelObj, new()
+        {
+            T view =null;// 
+            do
+            {
+                GameObject ins = InitRes(name);
+                if ( null == ins ){
+                    break;
+                }
+                
+                view =  new T();
+                if (view != null)
+                {
+                    InitNewPanel(view, ins, show, args );
+                }
+            } while (false);
+            return view;
+        }
+        //初始化后，并不显示
+        public T InitPanel<T>(string name, params object[] args) where T : CnPanelObj, new()
+        {
+            return LoadPanel<T>(name, false, args);
+        }
+        //初始化后，显示
+        public T LoadPanelShow<T>(string name, params object[] args) where T : CnPanelObj, new()
+        {
+            return LoadPanel<T>(name, true, args);
+        }
+
+        protected T Load<T>(string name, bool show, params object[] args) where T : CnViewBase
+        {
+            T view = null;
+            do
+            {
+                GameObject ins = InitRes(name);
+                if ( null == ins ){
+                    break;
+                }
+                
+                view = ins.AddComponent<T>();
+                if (view != null)
+                {
+                    WrapperCnViewBase panelObj =  new WrapperCnViewBase(view);
+                    if (panelObj != null){
+                        InitNewPanel(panelObj, ins, show, args );
                     }
                 }
             } while (false);
@@ -102,7 +151,7 @@ namespace Zby
             return Load<T>(name, true, args);
           
         }
-        public bool IsTop(CnViewBase view)
+        public bool IsTop(CnPanelObj view)
         {
             return view == this.GetTopView();
         }
@@ -112,7 +161,7 @@ namespace Zby
             return null;
         }
         //implement IViewMgr
-        public bool DestoryView(CnViewBase view)
+        public bool DestoryView(CnPanelObj view)
         {
             bool isTop = this.IsTop(view);
 
@@ -120,14 +169,14 @@ namespace Zby
           
             if (isTop)
             {
-                CnViewBase next = this.GetTopView();
-                if (next)
+                CnPanelObj next = this.GetTopView();
+                if (next != null)
                     next.DoBring2Top(view);
             }
             GameObject.DestroyImmediate(view.UIObj);
             return true;
         }
-        public bool CanUnload(CnViewBase view)
+        public bool CanUnload(CnPanelObj view)
         {
             if ( this._viewStack.Contains(view) )
             {
@@ -139,7 +188,7 @@ namespace Zby
             }
             return false;// this.IsTop(view);
         }
-        public bool DoShow(CnViewBase view)
+        public bool DoShow(CnPanelObj view)
         {
             bool ret = false;
             do{
@@ -148,9 +197,9 @@ namespace Zby
                     ZLog.E(null, "{0} no init view {1}_{2}", this._thisCanvas.name, view.GetName(), view.ZOrder);
                     break;
                 }
-                CnViewBase last_view = this.GetTopView();
+                CnPanelObj last_view = this.GetTopView();
                 this._viewStack.Add(view);
-                if (last_view)
+                if (last_view != null)
                 {
                     last_view.OnBehind(view);
                 }

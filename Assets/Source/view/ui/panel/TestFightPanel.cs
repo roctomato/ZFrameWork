@@ -48,7 +48,7 @@ public class TestFightPanel : CnViewBase
 	public override void OnLoad(params object[] args) 
     {
         _url = args[0] as string;
-        ZLog.D(this, "onload order {0}", this._zOrder);
+        ZLog.D(this, "onload order {0}", this.ZOrder);
 		
     }
 }

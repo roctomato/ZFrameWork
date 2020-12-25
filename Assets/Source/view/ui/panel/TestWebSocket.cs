@@ -12,7 +12,7 @@ public class TestWebSocket : CnViewBase, WebSocketHandler
     string _url;
     // Use this for initialization
     void Start () {
-        ZLog.D(this, "start socket order {0}", this._zOrder);
+        ZLog.D(this, "start socket order {0}", this.ZOrder);
 
         _component._btn1.transform.Find("Text").GetComponent<Text>().text = "connect";
         SetClickEventOnce(_component._btn1, ClickBtnConnet, new object[] { "cnt" });
@@ -88,7 +88,7 @@ public class TestWebSocket : CnViewBase, WebSocketHandler
 
     public override void OnLoad(params object[] args)
     {
-        ZLog.D(this, "onload order {0} url {1}", this._zOrder, args[0]);
+        ZLog.D(this, "onload order {0} url {1}", this.ZOrder, args[0]);
         _url = args[0] as String;
         
     }

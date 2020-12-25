@@ -6,10 +6,10 @@ using Zby;
 public class TestPanel : CnViewBase
 {
     float _waitSenconds = 10;
-
-	// Use this for initialization
+	    
+    // Use this for initialization
 	void Start () {
-        ZLog.D(this, "start order {0}", this._zOrder);
+        ZLog.D(this, "start order {0}", this.ZOrder);
         this.StartCoroutine("TestUnload");
 	}
 	
@@ -20,6 +20,7 @@ public class TestPanel : CnViewBase
 
     IEnumerator TestUnload()
     {
+        ZLog.D(this,"start coroutine");
         yield return new WaitForSeconds(_waitSenconds);
         this.DoUnload();
     }
@@ -27,19 +28,19 @@ public class TestPanel : CnViewBase
     public override void OnLoad(params object[] args) 
     {
         _waitSenconds = (float)args[0] ;
-        ZLog.D(this, "onload order {0}", this._zOrder);
+        ZLog.D(this, "onload order {0}", this.ZOrder);
     }
     public override bool OnUnload() {
-        ZLog.D(this, "onunload order {0}", this._zOrder);
+        ZLog.D(this, "onunload order {0}", this.ZOrder);
         return true;
     }
 
-    public override void OnBehind(CnViewBase topview) //从顶层移到后一层
+    public override void OnBehind(CnPanelObj topview) //从顶层移到后一层
     {
-        ZLog.D(this, "OnBehind order {0}", this._zOrder);
+        ZLog.D(this, "OnBehind order {0}", this.ZOrder);
     }
-    public override void OnTop(CnViewBase topview) //从后层变到顶层
+    public override void OnTop(CnPanelObj topview) //从后层变到顶层
     {
-        ZLog.D(this, "OnTop order {0}", this._zOrder);
+        ZLog.D(this, "OnTop order {0}", this.ZOrder);
     }  
 }

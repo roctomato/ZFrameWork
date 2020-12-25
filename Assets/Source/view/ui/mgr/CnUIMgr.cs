@@ -38,7 +38,7 @@ namespace Zby
     }
 
 
-     public class CnUIPathMgr : UIMgrBase
+    public class CnUIPathMgr : UIMgrBase
     {
         private static CnUIPathMgr m_Instance;
         public static CnUIPathMgr Instance

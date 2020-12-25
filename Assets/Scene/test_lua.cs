@@ -17,7 +17,8 @@ public class test_lua : MonoBehaviour
         main.Dispose();
         Debug.Log("load ok");
 
-        CnUIMgr.Instance.Load<LuaViewBase>("panel", "test_panel");
+        //CnUIMgr.Instance.Load<LuaViewBase>("panel", "test_panel");
+        //CnUIMgr.Instance.LoadPanelShow<LuaPanelBase>("panel", "test_panel");
     }
 
     // Update is called once per frame
