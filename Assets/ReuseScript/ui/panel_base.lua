@@ -1,4 +1,4 @@
-
+local button   = require("ui.button")
 
 return class {
 
@@ -32,10 +32,25 @@ return class {
     end,
 
     -- 功能函数
-    find_button = function (self, path)
-        -- body
-        local btn =self.mono.UIObj.transform:Find(path)
-        local cmpt = btn:GetComponent("Button")
+    find = function (self, path, type)
+        local obj =self.mono.UIObj.transform:Find(path)
+        local cmpt
+        if obj then
+            cmpt = obj:GetComponent(type)
+        end
         return cmpt
+    end,
+
+    unload = function(self)
+        self.mono:DoUnload()
+    end,
+    
+    find_button = function (self, path)
+        local btn
+        local obj = self:find(path, "Button")
+        if obj then
+            btn = button(obj)
+        end
+        return btn
     end,
 }

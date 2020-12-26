@@ -1,6 +1,5 @@
 
 local super = require("ui.panel_base")
-local button   = require("ui.button")
 
 return class {
     super = super, 
@@ -23,23 +22,28 @@ return class {
 
     register = function (self)
         -- body
-        local btnwrap = button(self:find_button("Btn1"))
+        local btnwrap = self:find_button("Btn1")
         btnwrap.text = "关闭"
         btnwrap:register_click(self.onLoginBtnClicked, self)
 
-        local btn2 = button(self:find_button("Btn2"))
+        local btn2 = self:find_button("Btn2")
         btn2.text = "隐藏按钮"
         btn2:register_click(function (btn2)
             btn2.visible = false
         end
         , btn2)
 
-        local btn3 = button(self:find_button("Btn3"))
+        local btn3 = self:find_button("Btn3")
         btn3.text = "显示按钮"
         btn3:register_click(function (btn2)
             btn2.visible = true
         end
         , btn2)
+
+        local btn4 = self:find_button("Btn4")
+        btn4.text = "战报面板"
+        btn4:register_click(self.onOpenReport, self)
+       
     end,
 
     update = function (self)
@@ -47,8 +51,14 @@ return class {
         self.a = self.a + 1
     end,
 
+    onOpenReport = function(self)
+        print("click", self.a)
+        ui_mgr:LoadPanel("CardFightFrame", "report_panel", false, {'has monobahavor'})
+    end,
+    
     onLoginBtnClicked = function(self)
         print("click", self.a)
-        self.mono:DoUnload()
+        self:unload()
+        ui_mgr:LoadPanel("LoginGame", "login_panel", true, {})
 	end,
 }

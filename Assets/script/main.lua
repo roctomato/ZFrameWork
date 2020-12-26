@@ -43,8 +43,8 @@ function Main()
 
     --local ui_mgr = CS.LuaUIMgr.InitByLoad("myui")
 
-    --ui_mgr:LoadPanel("LoginGame", "login_panel", true, {})
-    ui_mgr:LoadPanel("panel", "test_panel", false, {'has monobahavor'})
+    ui_mgr:LoadPanel("LoginGame", "login_panel", true, {})
+    --ui_mgr:LoadPanel("panel", "test_panel", true, {'has monobahavor'})
     --ui_mgr:LoadPanel("CardFightFrame", "ui.panel_base", false, {'has monobahavor'})
     --test_class()
 end
