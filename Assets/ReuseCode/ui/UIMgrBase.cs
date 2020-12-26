@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 
 
@@ -6,6 +7,19 @@ using UnityEngine;
 
 namespace Zby
 {
+    public enum InitUIRootType
+    {
+        [Description("创建")]
+        ByCreate,
+
+        [Description("场景中查找")]
+        ByFind,
+
+        [Description("延迟初始化")]
+        LateInit,
+
+        
+    }
     public class UIMgrBase : /*BaseCanvas,*/ IViewMgr
     {
         protected BaseCanvas _baseCanvas;
@@ -14,13 +28,14 @@ namespace Zby
         protected HashSet<CnPanelObj> _initViewSet;
 
         private int _viewID;
+        public delegate Canvas GetCanvas();
 
-        public UIMgrBase( string name, bool asPath)/*:base(name)*/
+        public UIMgrBase( string name, InitUIRootType initType)
         {
-            if ( asPath){
+            if ( initType == InitUIRootType.ByFind){
                 GameObject go = GameObject.Find(name);
                 _thisCanvas = go.GetComponent<Canvas>();
-            }else{
+            }else if ( initType == InitUIRootType.ByCreate) {
                 _baseCanvas = new BaseCanvas(name);
                 _thisCanvas = _baseCanvas.Main;
             }
@@ -29,6 +44,32 @@ namespace Zby
             _viewID = 0;
         }
 
+        public bool LoadCanvas( GetCanvas dg)
+        {
+            _thisCanvas = dg();
+            return _thisCanvas != null;
+        }
+
+        public void UnloadAll()
+        {
+            foreach (CnPanelObj p in _viewStack) 
+            { 
+            　　 if  (p != null){
+                    GameObject.DestroyImmediate(p.UIObj);
+                }
+            } 
+            this._viewStack.Clear();
+
+            foreach (CnPanelObj p in _initViewSet) 
+            { 
+            　　 if  (p != null){
+                    GameObject.DestroyImmediate(p.UIObj);
+                }
+            } 
+            this._initViewSet.Clear();
+
+        }
+       
         public CnPanelObj GetTopView()
         {
             CnPanelObj ret = null;

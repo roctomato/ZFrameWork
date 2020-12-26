@@ -141,6 +141,7 @@ local __class = setmetatable({}, {
             if type(func) == "table" then
                 local setter = func.setter
                 if type(setter) == "function" then  
+                    --print(key,value)
                     setter(self, value) 
                     return
                 end

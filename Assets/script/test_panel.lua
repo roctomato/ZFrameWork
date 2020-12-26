@@ -1,8 +1,12 @@
 
---print("in test panel lua")
+local super = require("ui.panel_base")
+local button   = require("ui.button")
+
 return class {
+    super = super, 
 
     ctor = function (self)
+        super.ctor(self) -- 调用父类构造函数
         print("构造")
         self.a= 0
     end,
@@ -10,33 +14,32 @@ return class {
     awake = function (self, args)
         -- body
         print("awake", self.a) --
-        print('args', args)
-        if args  then 
-            for k, v in ipairs(args) do
-                print(k,v)
-            end
-        end
-
         self:register()
-        --self.self.transform:RegisterBtnClickEvent("Btn1",  function_ex.make(self.onLoginBtnClicked, self))
     end,
 
     start = function (self)
         print("start", self.a)
-        --print(self.self:FindButton("Btn1"))
-        --self:register()
     end,
 
     register = function (self)
-        -- body 
-        print(self.mono.UIObj.transform) --CS.UnityEngine.GameObject.Find("Button"):GetComponent("Button").onClick:AddListener(util.coroutine_call(buy))
+        -- body
+        local btnwrap = button(self:find_button("Btn1"))
+        btnwrap.text = "关闭"
+        btnwrap:register_click(self.onLoginBtnClicked, self)
 
-        local btn =self.mono.UIObj.transform:Find("Btn1") --.GetComponent("Button").onClick:AddListener(self:onLoginBtnClicked())
-        print("btn", btn)
+        local btn2 = button(self:find_button("Btn2"))
+        btn2.text = "隐藏按钮"
+        btn2:register_click(function (btn2)
+            btn2.visible = false
+        end
+        , btn2)
 
-        local cmpt = btn:GetComponent("Button")
-        print(cmpt)
-        cmpt.onClick:AddListener(function_ex.make(self.onLoginBtnClicked, self))
+        local btn3 = button(self:find_button("Btn3"))
+        btn3.text = "显示按钮"
+        btn3:register_click(function (btn2)
+            btn2.visible = true
+        end
+        , btn2)
     end,
 
     update = function (self)

@@ -19,7 +19,7 @@ namespace Zby
 
         TmplLoaderBase _resLoader;
 
-        public CnUIMgr( ):base("myui", false)
+        public CnUIMgr( ):base("myui", InitUIRootType.ByCreate)
         {
             _resLoader = new TmplLoaderBase("ui");
             _resLoader.LoadFunc = LoadRes;
@@ -55,7 +55,7 @@ namespace Zby
 
         TmplLoaderBase _resLoader;
 
-        public CnUIPathMgr( ):base("GUIRoot/Canvas", true)
+        public CnUIPathMgr( ):base("GUIRoot/Canvas", InitUIRootType.ByFind)
         {
             _resLoader = new TmplLoaderBase("ui");
             _resLoader.LoadFunc = LoadRes;

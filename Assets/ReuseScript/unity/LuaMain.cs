@@ -6,19 +6,24 @@ using XLua;
 [LuaCallCSharp]
 public class LuaMain : MonoBehaviour
 {
-
+    public delegate  void OnQuit();
+    
     LuaEnv luaenv ;
     float lastGCTime = 0;
     float GCInterval = 1;//1 second 
+    OnQuit quitDl=null;
+    
+    
 
     static LuaMain instance;
 
-    static public LuaEnv InitLuaEvn( GameObject host, LuaEnv.CustomLoader loader, float gcIns=1)
+    static public LuaEnv InitLuaEvn( GameObject host, LuaEnv.CustomLoader loader, OnQuit cb=null, float gcIns=1)
     {
         if ( null == instance){
             instance = host.AddComponent<LuaMain>();
             instance.luaenv = new LuaEnv();
             instance.luaenv.AddLoader(loader);
+            instance.quitDl = cb;
             instance.GCInterval = gcIns;
         } 
         return instance.luaenv;
@@ -44,6 +49,9 @@ public class LuaMain : MonoBehaviour
 
     void OnApplicationQuit()
     {
+        if (quitDl != null){
+            quitDl();
+        }
         luaenv.Dispose();
     }
     
