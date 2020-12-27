@@ -9,11 +9,16 @@ return class {
     end,
 
     awake = function (self, args)
-        local btnwrap = self:find_button("static/Close")
-        btnwrap:register_click(self.onclose, self)
+        -- 注册按钮点击事件
+        clickEvents = {
+            "static/Close",
+        }
+
+        self:regClickEvents(clickEvents)
     end,
 
-    onclose = function(self)
+    click_Close = function(self)
         self:unload()
+        ui_mgr:LoadPanel("SDKPanel", "sdk_panel", true, {})
 	end,
 }

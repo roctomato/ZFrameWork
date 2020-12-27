@@ -1,19 +1,14 @@
 
 class = require('base.class')
 function_ex = require('base.functor')
---
-
-local enum = require("base.enum")
-local logger = require('base.logger')
-
---logger.mod("模块名") -- 定义新模块
---logger.mod("模块名").cat("新类别") -- 定义新类别
-
+logger = require('base.logger')
+enum = require("base.enum")
+utility = require("base.utility")
 
 local log = logger.get("logic", "pos1")
 
 logger.set_level("DEBUG")
- ui_mgr = CS.LuaUIMgr.InitByLoad()
+ui_mgr = CS.LuaUIMgr.InitByLoad()
 
 function test_class()
     -- body
@@ -42,8 +37,8 @@ function Main()
     log("from lua logic start.")
 
     --local ui_mgr = CS.LuaUIMgr.InitByLoad("myui")
-
-    ui_mgr:LoadPanel("LoginGame", "login_panel", true, {})
+    ui_mgr:LoadPanel("SDKPanel", "sdk_panel", true, {})
+    --ui_mgr:LoadPanel("LoginGame", "login_panel", true, {})
     --ui_mgr:LoadPanel("panel", "test_panel", true, {'has monobahavor'})
     --ui_mgr:LoadPanel("CardFightFrame", "ui.panel_base", false, {'has monobahavor'})
     --test_class()

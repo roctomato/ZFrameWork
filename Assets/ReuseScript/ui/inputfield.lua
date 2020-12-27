@@ -6,17 +6,24 @@ return class {
     
     ctor = function (self, native)
         super.ctor(self, native)
-        
-        if native then 
-        end
+        self._text = self:find_inner_text() 
     end, 
 
-    -- text = {
-    --     getter = function (self)
-    --         return self.__native.text
-    --     end, 
-    --     setter = function (self, value)
-    --         self.__native.text = value
-    --     end, 
-    -- }
+    text = {
+         getter = function (self)
+             return self.native.text
+         end, 
+         setter = function (self, value)
+             self.native.text = value
+         end, 
+    },
+
+    tip = {
+        getter = function (self)
+            return self._text.text
+        end, 
+        setter = function (self, value)
+            self._text.text = value
+        end, 
+   }
 }

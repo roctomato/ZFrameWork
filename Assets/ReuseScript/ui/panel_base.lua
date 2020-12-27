@@ -1,4 +1,10 @@
-local button   = require("ui.button")
+
+
+local button = require("ui.button")
+local text   = require("ui.text")
+local input_field = require("ui.InputField")
+
+local log = logger.get("ui", "ui_panel")
 
 return class {
 
@@ -45,6 +51,24 @@ return class {
         self.mono:DoUnload()
     end,
     
+    find_input = function( self, path)
+        local input 
+        local obj = self:find(path,"InputField")
+        if obj then
+            input = input_field(obj)
+        end
+        return input
+    end,
+
+    find_text = function( self, path)
+        local txt 
+        local obj = self:find(path,"Text")
+        if obj then
+            txt = text(obj)
+        end
+        return txt
+    end,
+
     find_button = function (self, path)
         local btn
         local obj = self:find(path, "Button")
@@ -53,4 +77,39 @@ return class {
         end
         return btn
     end,
+
+    --按照  "click_"+button名称 注册回调
+    reg_btn_click = function( self, btn_path)
+        local btnwrap = self:find_button(btn_path)
+        if not btnwrap then
+            logger.error("register event failed: not such button", btn_path)
+            return false
+        end
+
+        local btn_name = btn_path
+        local rst = string.find(btn_path, "/")
+        if rst then
+            btn_name = utility.lastStringOf( btn_path, "/")
+        end
+
+        local cb = self["click_" .. btn_name]
+        if not cb then
+            logger.error("register event failed: not such function", cb)
+            return false
+        end
+
+        btnwrap:register_click( cb, self)
+        return true
+    end,
+
+    regClickEvents = function(self,  clickEvents)
+        if type(clickEvents) == "table" then
+            for _, path in pairs(clickEvents) do
+                self:reg_btn_click(path)
+            end
+        else
+            logger.error("register event failed: clickEvents type err", type(clickEvents))
+        end
+    end,
+
 }
