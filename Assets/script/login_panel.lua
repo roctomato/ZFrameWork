@@ -14,14 +14,13 @@ return class {
     end,
 
     register = function (self)
-        local btn =self.mono.UIObj.transform:Find("ButtonLogin")
-        local cmpt = btn:GetComponent("Button")
-        cmpt.onClick:AddListener(function_ex.make(self.onLoginBtnClicked, self))
+        local btnwrap = self:find_button("ButtonLogin")
+        btnwrap:register_click(self.onLoginBtnClicked, self)
     end,
 
     onLoginBtnClicked = function(self)
         print("click", self.a)
-        self.mono:DoUnload()
-        ui_mgr:LoadPanel("panel", "test_panel", false, {'has monobahavor'})
+        self:unload()
+        ui_mgr:LoadPanel("panel", "test_panel", true, {'has monobahavor'})
 	end,
 }

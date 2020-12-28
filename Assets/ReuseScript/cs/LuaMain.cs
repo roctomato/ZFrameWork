@@ -1,6 +1,8 @@
 ﻿using System;
-using UnityEngine;
 using System.IO;
+using System.Collections.Generic;
+
+using UnityEngine;
 using XLua;
 
 [LuaCallCSharp]
@@ -12,21 +14,30 @@ public class LuaMain : MonoBehaviour
     float lastGCTime = 0;
     float GCInterval = 1;//1 second 
     OnQuit quitDl=null;
-    
+    LuaCustomLoader _customLoader;
     
 
     static LuaMain instance;
 
-    static public LuaEnv InitLuaEvn( GameObject host, LuaEnv.CustomLoader loader, OnQuit cb=null, float gcIns=1)
+    static public LuaEnv InitLuaEvn( GameObject host,  OnQuit cb=null, float gcIns=1)
     {
         if ( null == instance){
             instance = host.AddComponent<LuaMain>();
             instance.luaenv = new LuaEnv();
-            instance.luaenv.AddLoader(loader);
+            //instance.luaenv.AddLoader(loader);
             instance.quitDl = cb;
             instance.GCInterval = gcIns;
+            instance._customLoader = new LuaCustomLoader();
         } 
         return instance.luaenv;
+    }
+
+    static public LuaMain Ins
+    {
+        get
+        {
+            return instance;
+        }
     }
 
     static public LuaEnv MyLuaEnv
@@ -37,6 +48,17 @@ public class LuaMain : MonoBehaviour
         }
     }
     
+    public void InitZipLoader(string zipfile)
+    {
+        _customLoader.InitZipFile(zipfile);
+        luaenv.AddLoader(_customLoader.LoaderFromZipFile);
+    }
+
+    public void InitNormalFileLoader(string[] paths)
+    {
+        _customLoader.AddPath(paths);
+        luaenv.AddLoader(_customLoader.LoaderFromLoacalFile);
+    }
 
     void Update()
     {

@@ -5,8 +5,16 @@ return class {
     -- native 类型是transfrom
     ctor = function (self, native)
         self.native = native
-    end, 
+    end,
 
+    find_inner_text = function(self)
+        if self.native then
+            return self.native:GetComponentInChildren(typeof(CS.UnityEngine.UI.Text))
+        end
+        return nil
+    end,
+    
+    -- 通用属性
     visible = {
         getter = function (self)
             return self.native.gameObject:GetActive()
@@ -15,6 +23,10 @@ return class {
             self.native.gameObject:SetActive(value)
         end,
     },
+
+    
+
+  
 
     -- interactable = {
     --     getter = function (self)
