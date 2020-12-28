@@ -184,12 +184,6 @@ local __class = setmetatable({}, {
         local cls_new = function(...)
             local cls_inst = {}
             local instance = setmetatable(cls_inst, cls_meta)
-            if cls.finalize then 
-                -- print("checkpoint ~finalize")
-                local proxy = newproxy(true)
-                cls_inst[proxy] = true
-                getmetatable(proxy).__gc = function() cls_inst:finalize() end
-            end
             instance:ctor(...)
             return instance
         end

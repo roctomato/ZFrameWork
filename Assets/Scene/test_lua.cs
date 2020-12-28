@@ -6,10 +6,23 @@ using Zby;
 
 public class test_lua : MonoBehaviour
 {
+    LogFile _logFile = null;
+
     // Start is called before the first frame update
     void Start()
     {
-        LuaEnv luaenv = LuaMain.InitLuaEvn(this.gameObject, LuaCustomLoader.LoaderFromLoacalFile, OnQuit, 1);
+        _logFile = new LogFile();
+
+        LuaEnv luaenv = LuaMain.InitLuaEvn(this.gameObject,  OnQuit, 1);
+        string[] folds ={  
+            Application.dataPath +"/script/"
+         ,  Application.dataPath+"/ReuseScript/lua/"};
+
+        string luazip = Application.streamingAssetsPath + "/core.zip";
+
+        //LuaMain.Ins.InitNormalFileLoader(folds);
+        LuaMain.Ins.InitZipLoader(luazip);
+        
         luaenv.DoString("require 'main'");
 
         LuaFunction main = luaenv.Global.Get<LuaFunction>("Main");
@@ -31,6 +44,9 @@ public class test_lua : MonoBehaviour
             quit.Call();
             quit.Dispose();
         }
-        
+        if ( _logFile != null)
+            {
+                _logFile.Close();
+            }
     }
 }
