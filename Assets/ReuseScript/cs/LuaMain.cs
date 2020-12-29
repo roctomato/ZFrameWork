@@ -19,17 +19,16 @@ public class LuaMain : MonoBehaviour
 
     static LuaMain instance;
 
-    static public LuaEnv InitLuaEvn( GameObject host,  OnQuit cb=null, float gcIns=1)
+    static public LuaMain InitLuaEvn( GameObject host,  OnQuit cb=null, float gcIns=1)
     {
         if ( null == instance){
             instance = host.AddComponent<LuaMain>();
             instance.luaenv = new LuaEnv();
-            //instance.luaenv.AddLoader(loader);
             instance.quitDl = cb;
             instance.GCInterval = gcIns;
             instance._customLoader = new LuaCustomLoader();
         } 
-        return instance.luaenv;
+        return instance;
     }
 
     static public LuaMain Ins
@@ -77,4 +76,16 @@ public class LuaMain : MonoBehaviour
         luaenv.Dispose();
     }
     
+    public bool StartLua(string module, string function)
+    {
+        bool ret = false;
+        do{
+            luaenv.DoString(string.Format("require '{0}'", module));
+            LuaFunction main = luaenv.Global.Get<LuaFunction>(function);
+            main.Call();
+            main.Dispose();
+            ret = true;
+        }while(false);
+        return ret;
+    }
 }

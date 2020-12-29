@@ -1,33 +1,22 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
 using XLua;
 using Zby;
 
-public class test_lua : MonoBehaviour
+public class lua_attach : MonoBehaviour
 {
-    public bool useZip;
-
-    LogFile _logFile = null;
-
     // Start is called before the first frame update
     void Start()
     {
-        _logFile = new LogFile();
-
         LuaMain luaenv = LuaMain.InitLuaEvn(this.gameObject,  OnQuit, 1);
-        
-        if (useZip){
-            string luazip = Application.streamingAssetsPath + "/core.zip";
-            luaenv.InitZipLoader(luazip);
-        }else{
-            string[] folds ={  
+        string[] folds ={  
             Application.dataPath +"/script/"
             ,Application.dataPath+"/ReuseScript/lua/"};
 
-            luaenv.InitNormalFileLoader(folds);
-        }
-        luaenv. StartLua("main","Main");
+        luaenv.InitNormalFileLoader(folds);
+        luaenv. StartLua("test_attach","Main");
         Debug.Log("load ok");
     }
 
@@ -44,9 +33,6 @@ public class test_lua : MonoBehaviour
             quit.Call();
             quit.Dispose();
         }
-        if ( _logFile != null)
-            {
-                _logFile.Close();
-            }
+       
     }
 }

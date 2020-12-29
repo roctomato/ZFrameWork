@@ -8,7 +8,7 @@ using XLua;
 using Zby;
 
 [LuaCallCSharp]
-public class LuaViewBase : CnViewBase
+public class LuaNormalBehaiour :  MonoBehaviour
 {
     // Start is called before the first frame update
     LuaEnv luaEnv = LuaMain.MyLuaEnv;
@@ -18,16 +18,24 @@ public class LuaViewBase : CnViewBase
     private LuaFunction luaUpdate;
     private LuaFunction luaOnDestroy;
 
-
-    public override void OnLoad(params object[] args) 
-    { 
-        string stript_name = args[0] as string;
-        LuaTable param = null;
-        if (args.Length > 1) param = args[1] as LuaTable;
-
+    public GameObject UIObj { get { return gameObject; } }
+    static  public  bool Attach( GameObject go, string stript_name, LuaTable param )
+    {
+        bool ret = false;
+        do{
+            LuaNormalBehaiour mb = go.AddComponent<LuaNormalBehaiour>();
+            if ( null == mb ){
+                ZLog.E(go, "create {0} err", stript_name);
+                break;
+            }
+            ret = mb.OnLoad( stript_name, param);
+        }while(false);
+        return ret;
+    }
+    public bool  OnLoad(string stript_name, LuaTable param) 
+    {   
         object[] ret = luaEnv.DoString(string.Format(@"local view = require('{0}')
          return view()", stript_name, stript_name));
-        
         scriptEnv = ret[0] as LuaTable;
         scriptEnv.Set("mono", this);
 
@@ -41,14 +49,15 @@ public class LuaViewBase : CnViewBase
             luaAwake.Call( scriptEnv, param );
             luaAwake.Dispose();
         }
-         if (param != null){
+        if (param != null){
             param.Dispose();
         }
-    } //创建时调用，会在start前调用
-    
-    public override bool OnUnload() { return true; } //移除前调用
-    public override void OnBehind(CnPanelObj topview ) { } //从顶层移到后一层
-
+        return true;
+    }    
+    public void DoUnload()
+    {
+        GameObject.DestroyImmediate(this.gameObject);
+    }
      // Use this for initialization
         void Start()
         {

@@ -6,7 +6,7 @@ return class {
 
     ctor = function (self, native)
         super.ctor(self, native)
-    end, 
+    end,
 
     -- 含 text 的组件 先调用 init_text 之后可以用属性 text 赋值或取值
 
@@ -19,5 +19,5 @@ return class {
             self.native.text = text
         end,
     },
-   
+
 }

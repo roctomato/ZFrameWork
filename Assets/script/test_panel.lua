@@ -7,7 +7,7 @@ return class {
     ctor = function (self)
         super.ctor(self) -- 调用父类构造函数
         print("构造")
-        
+
     end,
 
     awake = function (self, args)
@@ -22,28 +22,22 @@ return class {
 
     register = function (self)
         -- body
-        local btnwrap = self:find_button("Btn1")
-        btnwrap:find_inner_text().text = "关闭"
-        btnwrap:register_click(self.click_Btn1, self)
+        local btns ={
+            "Btn1",
+            "Btn2",
+            "Btn3",
+            "Btn4"
+        }
 
-        local btn2 = self:find_button("Btn2")
-        btn2:find_inner_text().text = "隐藏按钮"
-        btn2:register_click(function (btn2)
-            btn2.visible = false
-        end
-        , btn2)
+        self:initWidgetTextValues(btns)
+        self:initButtonValues(btns)
+        self:regClickEvents(btns)
 
-        local btn3 = self:find_button("Btn3")
-        btn3:find_inner_text().text = "显示按钮"
-        btn3:register_click(function (btn2)
-            btn2.visible = true
-        end
-        , btn2)
+        self._txtBtn1.text = "关闭"
+        self._txtBtn2.text = "隐藏按钮"
+        self._txtBtn3.text = "显示按钮"
+        self._txtBtn4.text = "战报面板"
 
-        local btn4 = self:find_button("Btn4")
-        btn4:find_inner_text().text = "战报面板"
-        btn4:register_click(self.click_Btn4, self)
-       
     end,
 
     update = function (self)
@@ -55,10 +49,19 @@ return class {
         ui_mgr:LoadPanel("LoginGame", "login_panel", true, {})
     end,
 
-    click_Btn4 = function(self) 
+    click_Btn2 = function(self)
+        print("click btn2")
+        self._btnBtn2.visible = false
+    end,
+
+    click_Btn3 = function(self)
+        self._btnBtn2.visible = true
+    end,
+
+    click_Btn4 = function(self)
+        print("click btn3")
         self:unload()
         ui_mgr:LoadPanel("CardFightFrame", "report_panel", false, {'has monobahavor'})
     end
 
-   
 }

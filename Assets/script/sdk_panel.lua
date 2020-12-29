@@ -10,7 +10,7 @@ return class {
 
     awake = function (self, args)
         -- 注册按钮点击事件
-        clickEvents = {
+        local clickEvents = {
             "btnCall",
         }
 

@@ -35,6 +35,9 @@ public class LuaPanelBase : CnPanelObj
             luaAwake.Call( scriptEnv, param );
             luaAwake.Dispose();
         }
+        if (param != null){
+            param.Dispose();
+        }
 
     } //创建时调用，会在start前调用
     

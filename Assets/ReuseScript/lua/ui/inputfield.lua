@@ -1,29 +1,29 @@
 local super = require "ui.widget"
 
 return class {
-    typename = "InputField", 
+    typename = "InputField",
     super = super,
-    
+
     ctor = function (self, native)
         super.ctor(self, native)
-        self._text = self:find_inner_text() 
-    end, 
+        self._text = self:find_inner_text()
+    end,
 
     text = {
          getter = function (self)
              return self.native.text
-         end, 
+         end,
          setter = function (self, value)
              self.native.text = value
-         end, 
+         end,
     },
 
     tip = {
         getter = function (self)
             return self._text.text
-        end, 
+        end,
         setter = function (self, value)
             self._text.text = value
-        end, 
+        end,
    }
 }

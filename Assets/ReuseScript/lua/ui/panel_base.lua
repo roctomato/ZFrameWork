@@ -2,7 +2,8 @@
 
 local button = require("ui.button")
 local text   = require("ui.text")
-local input_field = require("ui.InputField")
+local input_field = require("ui.inputfield")
+local widget = require("ui.widget")
 
 local log = logger.get("ui", "ui_panel")
 
@@ -50,9 +51,9 @@ return class {
     unload = function(self)
         self.mono:DoUnload()
     end,
-    
+
     find_input = function( self, path)
-        local input 
+        local input
         local obj = self:find(path,"InputField")
         if obj then
             input = input_field(obj)
@@ -61,7 +62,7 @@ return class {
     end,
 
     find_text = function( self, path)
-        local txt 
+        local txt
         local obj = self:find(path,"Text")
         if obj then
             txt = text(obj)
@@ -76,6 +77,122 @@ return class {
             btn = button(obj)
         end
         return btn
+    end,
+
+    --按照  "_txt"+text_path 生成引用变量
+    init_inner_text = function( self, widget_path)
+        local obj =self.mono.UIObj.transform:Find(widget_path)
+        if not obj then
+            logger.error(" not such widget", widget_path)
+            return false
+        end
+        local wd = widget(obj)
+        local txt = wd:find_inner_text()
+        if not txt then
+            logger.error(" not find child text", widget_path)
+            return false
+        end
+
+        local btn_name = widget_path
+        local rst = string.find(widget_path, "/")
+        if rst then
+            btn_name = utility.lastStringOf( widget_path, "/")
+        end
+
+        self["_txt" .. btn_name]=txt
+        return true
+    end,
+
+    initWidgetTextValues = function(self,  text_paths)
+        if type(text_paths) == "table" then
+            for _, path in pairs(text_paths) do
+                self:init_inner_text(path)
+            end
+        else
+            logger.error("init button failed: text_paths type err", type(text_paths))
+        end
+    end,
+
+    init_text_value = function( self, text_path)
+        local btnwrap = self:find_text(text_path)
+        if not btnwrap then
+            logger.error(" not such text", text_path)
+            return false
+        end
+
+        local btn_name = text_path
+        local rst = string.find(text_path, "/")
+        if rst then
+            btn_name = utility.lastStringOf( text_path, "/")
+        end
+
+        self["_txt" .. btn_name]=btnwrap
+        return true
+    end,
+
+    initTextValues = function(self,  text_paths)
+        if type(text_paths) == "table" then
+            for _, path in pairs(text_paths) do
+                self:init_text_value(path)
+            end
+        else
+            logger.error("init button failed: text_paths type err", type(text_paths))
+        end
+    end,
+    --按照  "_ipt"+input_path 生成引用变量
+    init_input_value = function( self, input_path)
+        local btnwrap = self:find_input(input_path)
+        if not btnwrap then
+            logger.error("register event failed: not such input", input_path)
+            return false
+        end
+
+        local btn_name = input_path
+        local rst = string.find(input_path, "/")
+        if rst then
+            btn_name = utility.lastStringOf( input_path, "/")
+        end
+
+        self["_ipt" .. btn_name]=btnwrap
+        return true
+    end,
+
+    initInputValues = function(self,  input_paths)
+        if type(input_paths) == "table" then
+            for _, path in pairs(input_paths) do
+                self:init_input_value(path)
+            end
+        else
+            logger.error("init button failed: btn_paths type err", type(input_paths))
+        end
+    end,
+
+    --按照  "_btn"+button名称 生成引用变量
+    init_button_value = function( self, btn_path)
+        local btnwrap = self:find_button(btn_path)
+        if not btnwrap then
+            logger.error("register event failed: not such button", btn_path)
+            return false
+        end
+
+        local btn_name = btn_path
+        local rst = string.find(btn_path, "/")
+        if rst then
+            btn_name = utility.lastStringOf( btn_path, "/")
+        end
+
+        self["_btn" .. btn_name]=btnwrap
+        return true
+    end,
+
+    initButtonValues = function(self,  btn_paths)
+        if type(btn_paths) == "table" then
+            for _, path in pairs(btn_paths) do
+                self:init_button_value(path)
+            end
+        else
+            logger.error("init button failed: btn_paths type err", type(btn_paths))
+        end
     end,
 
     --按照  "click_"+button名称 注册回调

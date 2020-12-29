@@ -13,7 +13,7 @@ return class {
         end
         return nil
     end,
-    
+
     -- 通用属性
     visible = {
         getter = function (self)
@@ -24,9 +24,7 @@ return class {
         end,
     },
 
-    
 
-  
 
     -- interactable = {
     --     getter = function (self)
