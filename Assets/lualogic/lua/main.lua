@@ -5,6 +5,8 @@ logger = require('base.logger')
 enum = require("base.enum")
 utility = require("base.utility")
 
+widget = require("ui.widget")
+
 local log = logger.get("logic", "pos1")
 
 logger.set_level("DEBUG")
@@ -31,6 +33,10 @@ function test_log()
     logger.get("logic", "pos4").error("E from lua logic start.")
 end
 
+function test_name_class()
+    -- body
+     
+end
 
 --主入口函数。从这里开始lua逻辑
 function Main()
@@ -40,8 +46,11 @@ function Main()
     --ui_mgr:LoadPanel("SDKPanel", "sdk_panel", true, {})
     --ui_mgr:LoadPanel("LoginGame", "login_panel", true, {})
     --ui_mgr:LoadPanel("panel", "test_panel", true, {'has monobahavor'})
-    local panel =ui_mgr:LoadSimplePanel("FightReportFrame", "ui.panel_base",  {'has monobahavor'})
+    local panel =ui_mgr:LoadSimplePanel("FightReportFrame", "report_panel",  {'has monobahavor'})
     panel.UIObj:SetActive(true)
+    local wd = widget( panel.UIObj.transform)
+    local btn =wd:find_button("static/Close")
+    print(btn)
     --ui_mgr:LoadPanel("ReportSetFrame", "ui.panel_base", false, {'has monobahavor'})
     --test_class()
 end

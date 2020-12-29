@@ -19,6 +19,6 @@ return class {
 
     click_Close = function(self)
         self:unload()
-        ui_mgr:LoadPanel("SDKPanel", "sdk_panel", true, {})
+        --ui_mgr:LoadPanel("SDKPanel", "sdk_panel", true, {})
 	end,
 }
