@@ -22,7 +22,7 @@ public class test_lua : MonoBehaviour
             luaenv.InitZipLoader(luazip);
         }else{
             string[] folds ={  
-            Application.dataPath +"/script/"
+            Application.dataPath +"/lualogic/lua/"
             ,Application.dataPath+"/ReuseScript/lua/"};
 
             luaenv.InitNormalFileLoader(folds);

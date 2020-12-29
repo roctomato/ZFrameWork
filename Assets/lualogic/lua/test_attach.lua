@@ -8,7 +8,7 @@ utility = require("base.utility")
 local log = logger.get("logic", "pos1")
 
 logger.set_level("DEBUG")
-ui_mgr = CS.LuaUIMgr.InitByLoad()
+ui_mgr = CS.LuaUIMgr.InitByFind("/GUIRoot/Canvas")
 
 --主入口函数。从这里开始lua逻辑
 function Main()

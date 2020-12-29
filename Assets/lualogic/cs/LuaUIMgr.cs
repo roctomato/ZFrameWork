@@ -69,6 +69,14 @@ public class LuaUIMgr:  UIMgrBase
             }while(false);
             return ret;
         }
+        public LuaPanelBase LoadSimplePanel(string ui_res, string lua_cls, LuaTable param)
+        {
+            return LoadPanelShow<LuaPanelBase>(ui_res, lua_cls, param);
+        }
+        public LuaViewBase LoadMonoPanel(string ui_res, string lua_cls, LuaTable param)
+        {
+            return Load<LuaViewBase>(ui_res, lua_cls, param);
+        }
         public bool LoadPanel(string ui_res, string lua_cls, bool asSimple, LuaTable param)
         {
             bool ret = false;

@@ -39,8 +39,10 @@ function Main()
     --local ui_mgr = CS.LuaUIMgr.InitByLoad("myui")
     --ui_mgr:LoadPanel("SDKPanel", "sdk_panel", true, {})
     --ui_mgr:LoadPanel("LoginGame", "login_panel", true, {})
-    ui_mgr:LoadPanel("panel", "test_panel", true, {'has monobahavor'})
-    --ui_mgr:LoadPanel("CardFightFrame", "ui.panel_base", false, {'has monobahavor'})
+    --ui_mgr:LoadPanel("panel", "test_panel", true, {'has monobahavor'})
+    local panel =ui_mgr:LoadSimplePanel("FightReportFrame", "ui.panel_base",  {'has monobahavor'})
+    panel.UIObj:SetActive(true)
+    --ui_mgr:LoadPanel("ReportSetFrame", "ui.panel_base", false, {'has monobahavor'})
     --test_class()
 end
 

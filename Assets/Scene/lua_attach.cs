@@ -12,7 +12,7 @@ public class lua_attach : MonoBehaviour
     {
         LuaMain luaenv = LuaMain.InitLuaEvn(this.gameObject,  OnQuit, 1);
         string[] folds ={  
-            Application.dataPath +"/script/"
+            Application.dataPath +"/lualogic/lua/"
             ,Application.dataPath+"/ReuseScript/lua/"};
 
         luaenv.InitNormalFileLoader(folds);
