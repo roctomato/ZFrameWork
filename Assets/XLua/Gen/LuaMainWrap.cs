@@ -21,10 +21,11 @@ namespace XLua.CSObjectWrap
         {
 			ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			System.Type type = typeof(LuaMain);
-			Utils.BeginObjectRegister(type, L, translator, 0, 2, 0, 0);
+			Utils.BeginObjectRegister(type, L, translator, 0, 3, 0, 0);
 			
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "InitZipLoader", _m_InitZipLoader);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "InitNormalFileLoader", _m_InitNormalFileLoader);
+			Utils.RegisterFunc(L, Utils.METHOD_IDX, "StartLua", _m_StartLua);
 			
 			
 			
@@ -180,6 +181,36 @@ namespace XLua.CSObjectWrap
                     
                     
                     return 0;
+                }
+                
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _m_StartLua(RealStatePtr L)
+        {
+		    try {
+            
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+            
+            
+                LuaMain gen_to_be_invoked = (LuaMain)translator.FastGetCSObj(L, 1);
+            
+            
+                
+                {
+                    string _module = LuaAPI.lua_tostring(L, 2);
+                    string _function = LuaAPI.lua_tostring(L, 3);
+                    
+                        var gen_ret = gen_to_be_invoked.StartLua( _module, _function );
+                        LuaAPI.lua_pushboolean(L, gen_ret);
+                    
+                    
+                    
+                    return 1;
                 }
                 
             } catch(System.Exception gen_e) {

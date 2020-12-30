@@ -68,6 +68,11 @@ local function define_category(module, category)
             category_mute[category] = true
         end, 
 
+        trace=function(...)
+            local log_txt = __string(module, category, concat_all(...)).. "\n" .. debug.traceback()
+            app_logger.Log(log_txt)
+        end,
+
         debug = function (...)
             if out_level and out_level.rawValue <= levels.DEBUG.rawValue and is_category_open(category) then 
                 app_logger.Log(__string(module, category, concat_all(...)))

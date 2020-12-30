@@ -77,7 +77,7 @@ public class ScrollView : ScrollRect
         {
             if (Application.isPlaying)
             {
-                AppLog.Warn("Scroll view can only set cell template in editor mode.");
+                Debug.LogErrorFormat(null,"Scroll view can only set cell template in editor mode.");
                 return;
             }
 
@@ -548,15 +548,17 @@ public class ScrollView : ScrollRect
 
         if (this.onCellUpdate != null)
         {
-            try
-            {
+            //try
+            //{
                 this.onCellUpdate(go.transform, cellIndex);
-            }
-            catch// (System.Exception ex)
-            {
+            //}
+            //catch (System.Exception ex)
+            //{
+            //    ZLog.E(this, ex.StackTrace);
+            //    ZLog.E(this, ex.Message);
                 //AppLog.Error(ex.StackTrace);
                 //AppLog.Error(ex.Message);
-            }
+            //}
         }
 
         return true;

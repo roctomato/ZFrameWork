@@ -17,27 +17,6 @@ return class {
     end,
 
 
-    find = function (self, path, type)
-        local obj =self.native:Find(path)
-        local cmpt
-        if obj then
-            cmpt = obj:GetComponent(type)
-        end
-        return cmpt
-    end,
-
-    find_input = function( self, path)
-       return self:find(path,"InputField")
-    end,
-
-    find_text = function( self, path)
-        return self:find(path,"Text")
-    end,
-
-    find_button = function (self, path)
-        return  self:find(path, "Button")
-    end,
-
     -- 通用属性
     visible = {
         getter = function (self)

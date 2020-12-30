@@ -21,9 +21,11 @@ namespace XLua.CSObjectWrap
         {
 			ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			System.Type type = typeof(LuaUIMgr);
-			Utils.BeginObjectRegister(type, L, translator, 0, 3, 0, 0);
+			Utils.BeginObjectRegister(type, L, translator, 0, 5, 0, 0);
 			
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "LoadCanvas", _m_LoadCanvas);
+			Utils.RegisterFunc(L, Utils.METHOD_IDX, "LoadSimplePanel", _m_LoadSimplePanel);
+			Utils.RegisterFunc(L, Utils.METHOD_IDX, "LoadMonoPanel", _m_LoadMonoPanel);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "LoadPanel", _m_LoadPanel);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "FindUIRes", _m_FindUIRes);
 			
@@ -170,6 +172,68 @@ namespace XLua.CSObjectWrap
         }
         
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _m_LoadSimplePanel(RealStatePtr L)
+        {
+		    try {
+            
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+            
+            
+                LuaUIMgr gen_to_be_invoked = (LuaUIMgr)translator.FastGetCSObj(L, 1);
+            
+            
+                
+                {
+                    string _ui_res = LuaAPI.lua_tostring(L, 2);
+                    string _lua_cls = LuaAPI.lua_tostring(L, 3);
+                    XLua.LuaTable _param = (XLua.LuaTable)translator.GetObject(L, 4, typeof(XLua.LuaTable));
+                    
+                        var gen_ret = gen_to_be_invoked.LoadSimplePanel( _ui_res, _lua_cls, _param );
+                        translator.Push(L, gen_ret);
+                    
+                    
+                    
+                    return 1;
+                }
+                
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _m_LoadMonoPanel(RealStatePtr L)
+        {
+		    try {
+            
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+            
+            
+                LuaUIMgr gen_to_be_invoked = (LuaUIMgr)translator.FastGetCSObj(L, 1);
+            
+            
+                
+                {
+                    string _ui_res = LuaAPI.lua_tostring(L, 2);
+                    string _lua_cls = LuaAPI.lua_tostring(L, 3);
+                    XLua.LuaTable _param = (XLua.LuaTable)translator.GetObject(L, 4, typeof(XLua.LuaTable));
+                    
+                        var gen_ret = gen_to_be_invoked.LoadMonoPanel( _ui_res, _lua_cls, _param );
+                        translator.Push(L, gen_ret);
+                    
+                    
+                    
+                    return 1;
+                }
+                
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
         static int _m_LoadPanel(RealStatePtr L)
         {
 		    try {
@@ -188,7 +252,7 @@ namespace XLua.CSObjectWrap
                     XLua.LuaTable _param = (XLua.LuaTable)translator.GetObject(L, 5, typeof(XLua.LuaTable));
                     
                         var gen_ret = gen_to_be_invoked.LoadPanel( _ui_res, _lua_cls, _asSimple, _param );
-                        LuaAPI.lua_pushboolean(L, gen_ret);
+                        translator.Push(L, gen_ret);
                     
                     
                     

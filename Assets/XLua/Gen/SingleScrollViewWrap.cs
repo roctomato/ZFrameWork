@@ -15,21 +15,22 @@ using System.Collections.Generic;
 namespace XLua.CSObjectWrap
 {
     using Utils = XLua.Utils;
-    public class LuaPanelBaseWrap 
+    public class SingleScrollViewWrap 
     {
         public static void __Register(RealStatePtr L)
         {
 			ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
-			System.Type type = typeof(LuaPanelBase);
-			Utils.BeginObjectRegister(type, L, translator, 0, 2, 1, 0);
-			
-			Utils.RegisterFunc(L, Utils.METHOD_IDX, "OnLoad", _m_OnLoad);
-			Utils.RegisterFunc(L, Utils.METHOD_IDX, "OnUnload", _m_OnUnload);
+			System.Type type = typeof(SingleScrollView);
+			Utils.BeginObjectRegister(type, L, translator, 0, 0, 2, 2);
 			
 			
-			Utils.RegisterFunc(L, Utils.GETTER_IDX, "LuaClass", _g_get_LuaClass);
+			
+			Utils.RegisterFunc(L, Utils.GETTER_IDX, "onGetCellHeight", _g_get_onGetCellHeight);
+            Utils.RegisterFunc(L, Utils.GETTER_IDX, "onGetCellWidth", _g_get_onGetCellWidth);
             
-			
+			Utils.RegisterFunc(L, Utils.SETTER_IDX, "onGetCellHeight", _s_set_onGetCellHeight);
+            Utils.RegisterFunc(L, Utils.SETTER_IDX, "onGetCellWidth", _s_set_onGetCellWidth);
+            
 			
 			Utils.EndObjectRegister(type, L, translator, null, null,
 			    null, null, null);
@@ -53,7 +54,7 @@ namespace XLua.CSObjectWrap
 				if(LuaAPI.lua_gettop(L) == 1)
 				{
 					
-					var gen_ret = new LuaPanelBase();
+					var gen_ret = new SingleScrollView();
 					translator.Push(L, gen_ret);
                     
 					return 1;
@@ -63,7 +64,7 @@ namespace XLua.CSObjectWrap
 			catch(System.Exception gen_e) {
 				return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
 			}
-            return LuaAPI.luaL_error(L, "invalid arguments to LuaPanelBase constructor!");
+            return LuaAPI.luaL_error(L, "invalid arguments to SingleScrollView constructor!");
             
         }
         
@@ -74,73 +75,31 @@ namespace XLua.CSObjectWrap
         
         
         
-        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-        static int _m_OnLoad(RealStatePtr L)
-        {
-		    try {
-            
-                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
-            
-            
-                LuaPanelBase gen_to_be_invoked = (LuaPanelBase)translator.FastGetCSObj(L, 1);
-            
-            
-                
-                {
-                    object[] _args = translator.GetParams<object>(L, 2);
-                    
-                    gen_to_be_invoked.OnLoad( _args );
-                    
-                    
-                    
-                    return 0;
-                }
-                
-            } catch(System.Exception gen_e) {
-                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
-            }
-            
-        }
-        
-        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-        static int _m_OnUnload(RealStatePtr L)
-        {
-		    try {
-            
-                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
-            
-            
-                LuaPanelBase gen_to_be_invoked = (LuaPanelBase)translator.FastGetCSObj(L, 1);
-            
-            
-                
-                {
-                    
-                        var gen_ret = gen_to_be_invoked.OnUnload(  );
-                        LuaAPI.lua_pushboolean(L, gen_ret);
-                    
-                    
-                    
-                    return 1;
-                }
-                
-            } catch(System.Exception gen_e) {
-                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
-            }
-            
-        }
-        
         
         
         
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-        static int _g_get_LuaClass(RealStatePtr L)
+        static int _g_get_onGetCellHeight(RealStatePtr L)
         {
 		    try {
                 ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			
-                LuaPanelBase gen_to_be_invoked = (LuaPanelBase)translator.FastGetCSObj(L, 1);
-                translator.Push(L, gen_to_be_invoked.LuaClass);
+                SingleScrollView gen_to_be_invoked = (SingleScrollView)translator.FastGetCSObj(L, 1);
+                translator.Push(L, gen_to_be_invoked.onGetCellHeight);
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            return 1;
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _g_get_onGetCellWidth(RealStatePtr L)
+        {
+		    try {
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+			
+                SingleScrollView gen_to_be_invoked = (SingleScrollView)translator.FastGetCSObj(L, 1);
+                translator.Push(L, gen_to_be_invoked.onGetCellWidth);
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
             }
@@ -148,6 +107,36 @@ namespace XLua.CSObjectWrap
         }
         
         
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _s_set_onGetCellHeight(RealStatePtr L)
+        {
+		    try {
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+			
+                SingleScrollView gen_to_be_invoked = (SingleScrollView)translator.FastGetCSObj(L, 1);
+                gen_to_be_invoked.onGetCellHeight = translator.GetDelegate<SingleScrollView.CellGetSizeDelegate>(L, 2);
+            
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            return 0;
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _s_set_onGetCellWidth(RealStatePtr L)
+        {
+		    try {
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+			
+                SingleScrollView gen_to_be_invoked = (SingleScrollView)translator.FastGetCSObj(L, 1);
+                gen_to_be_invoked.onGetCellWidth = translator.GetDelegate<SingleScrollView.CellGetSizeDelegate>(L, 2);
+            
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            return 0;
+        }
         
 		
 		

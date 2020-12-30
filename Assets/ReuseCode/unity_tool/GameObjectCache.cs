@@ -66,7 +66,7 @@ public class GameObjectCache
     {
         if (!m_IsInited)
         {
-            AppLog.Error("the object has't inited.");
+            Debug.LogErrorFormat(null,"the object has't inited.");
             return null;
         }
 
@@ -133,7 +133,7 @@ public class GameObjectCache
     {
         if (!m_IsInited)
         {
-            AppLog.Error("the object has't inited.");
+            Debug.LogErrorFormat(null,"the object has't inited.");
             return;
         }
 
@@ -171,7 +171,7 @@ public class GameObjectCache
     {
         if (!m_IsInited)
         {
-            AppLog.Error("the object has't inited.");
+            Debug.LogErrorFormat(null,"the object has't inited.");
             return;
         }
 

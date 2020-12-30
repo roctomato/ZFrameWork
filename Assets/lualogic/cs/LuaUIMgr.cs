@@ -69,25 +69,26 @@ public class LuaUIMgr:  UIMgrBase
             }while(false);
             return ret;
         }
-        public LuaPanelBase LoadSimplePanel(string ui_res, string lua_cls, LuaTable param)
+        public LuaTable LoadSimplePanel(string ui_res, string lua_cls, LuaTable param)
         {
-            return LoadPanelShow<LuaPanelBase>(ui_res, lua_cls, param);
+            LuaPanelBase ins = LoadPanelShow<LuaPanelBase>(ui_res, lua_cls, param);
+            return ins.LuaClass;
         }
-        public LuaViewBase LoadMonoPanel(string ui_res, string lua_cls, LuaTable param)
+        public LuaTable LoadMonoPanel(string ui_res, string lua_cls, LuaTable param)
         {
-            return Load<LuaViewBase>(ui_res, lua_cls, param);
+            LuaViewBase ins = Load<LuaViewBase>(ui_res, lua_cls, param);
+            return ins.LuaClass;
         }
-        public bool LoadPanel(string ui_res, string lua_cls, bool asSimple, LuaTable param)
+        public LuaTable LoadPanel(string ui_res, string lua_cls, bool asSimple, LuaTable param)
         {
-            bool ret = false;
-            do{
-                if (asSimple){
-                    LoadPanelShow<LuaPanelBase>(ui_res, lua_cls, param);
-                }else{
-                    Load<LuaViewBase>(ui_res, lua_cls, param);
-                }
-                ret = true;
-            }while(false);
+            LuaTable ret = null;
+           
+            if (asSimple){
+                ret = LoadSimplePanel(ui_res, lua_cls, param);
+            }else{
+                ret = LoadMonoPanel(ui_res, lua_cls, param);
+            }
+               
             return ret;
         }
         private LuaUIMgr( string name, InitUIRootType asPath):base(name, asPath)

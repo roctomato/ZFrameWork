@@ -26,6 +26,7 @@ public class CheckPathPanel : CnViewBase
         sb.AppendFormat("persistentDataPath:{0}\n", Application.persistentDataPath);
         sb.AppendFormat("streamingAssetsPath:{0}\n", Application.streamingAssetsPath);
         sb.AppendFormat("temporaryCachePath:{0}\n", Application.temporaryCachePath);
+        sb.AppendFormat("UserDocumentPath:{0}\n",  OSTools.GetUserDocumentPath());
      
 
         _component.iptFight.text = sb.ToString();

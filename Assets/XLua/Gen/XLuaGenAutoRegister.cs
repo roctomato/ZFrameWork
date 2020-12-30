@@ -22,6 +22,27 @@ namespace XLua.CSObjectWrap
         static void wrapInit0(LuaEnv luaenv, ObjectTranslator translator)
         {
         
+            translator.DelayWrapLoader(typeof(LuaUIMgr), LuaUIMgrWrap.__Register);
+        
+        
+            translator.DelayWrapLoader(typeof(ScrollView), ScrollViewWrap.__Register);
+        
+        
+            translator.DelayWrapLoader(typeof(SingleScrollView), SingleScrollViewWrap.__Register);
+        
+        
+            translator.DelayWrapLoader(typeof(LuaMain), LuaMainWrap.__Register);
+        
+        
+            translator.DelayWrapLoader(typeof(LuaNormalBehaiour), LuaNormalBehaiourWrap.__Register);
+        
+        
+            translator.DelayWrapLoader(typeof(LuaPanelBase), LuaPanelBaseWrap.__Register);
+        
+        
+            translator.DelayWrapLoader(typeof(LuaViewBase), LuaViewBaseWrap.__Register);
+        
+        
             translator.DelayWrapLoader(typeof(object), SystemObjectWrap.__Register);
         
         
@@ -153,6 +174,10 @@ namespace XLua.CSObjectWrap
         
             translator.DelayWrapLoader(typeof(XLuaTest.Foo2Child), XLuaTestFoo2ChildWrap.__Register);
         
+        }
+        
+        static void wrapInit1(LuaEnv luaenv, ObjectTranslator translator)
+        {
         
             translator.DelayWrapLoader(typeof(XLuaTest.Foo), XLuaTestFooWrap.__Register);
         
@@ -170,6 +195,8 @@ namespace XLua.CSObjectWrap
         {
             
             wrapInit0(luaenv, translator);
+            
+            wrapInit1(luaenv, translator);
             
             
             translator.AddInterfaceBridgeCreator(typeof(System.Collections.IEnumerator), SystemCollectionsIEnumeratorBridge.__Create);
