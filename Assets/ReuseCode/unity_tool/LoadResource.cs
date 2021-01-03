@@ -1,9 +1,34 @@
-﻿using UnityEngine;
+﻿
+using System;
+using System.Collections;
+using System.Collections.Generic;
+
 
 namespace Zby
 {
+    using UnityEngine;
+
     static public class LoadResource
     {
+            public static Object LoadMainAssetAtPath(string assetPath)
+            {
+#if UNITY_EDITOR
+                return UnityEditor.AssetDatabase.LoadMainAssetAtPath(assetPath);
+#else
+                return null;
+#endif
+            }
+
+            public static Object LoadAssetAtPath(string assetPath, Type type)
+            {
+#if UNITY_EDITOR
+                return UnityEditor.AssetDatabase.LoadAssetAtPath(assetPath, type);
+#else
+                return null;
+#endif
+            }
+        
+
         static public UnityEngine.Object Load(string path)
         {
             var obj = Resources.Load( path);
