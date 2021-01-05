@@ -16,6 +16,10 @@ return class {
         return nil
     end,
 
+    --类实例挂到monobehaviour中去， 框架会调用类中的 awake start update ondestory 函数
+    attach = function (self)
+        CS.LuaNormalBehaiour.AttachIns(self.native.gameObject,self, self)
+    end,
 
     -- 通用属性
     visible = {

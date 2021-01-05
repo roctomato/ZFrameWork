@@ -22,12 +22,14 @@ namespace Zby
     }
     public class UIMgrBase : /*BaseCanvas,*/ IViewMgr
     {
-        protected BaseCanvas _baseCanvas;
-        protected Canvas _thisCanvas;
+        //protected BaseCanvas _baseCanvas;
+        //protected Canvas _thisCanvas;
+        protected GameObject _root;
         protected List<CnPanelObj> _viewStack;
         protected HashSet<CnPanelObj> _initViewSet;
 
         private int _viewID;
+        /*
         public delegate Canvas GetCanvas();
 
         public UIMgrBase( string name, InitUIRootType initType)
@@ -48,8 +50,15 @@ namespace Zby
         {
             _thisCanvas = dg();
             return _thisCanvas != null;
-        }
+        }*/
 
+        public UIMgrBase( GameObject root)
+        {
+            _root = root;
+            _viewStack = new List<CnPanelObj>();
+            _initViewSet = new HashSet<CnPanelObj>();
+            _viewID = 0;
+        }
         public void UnloadAll()
         {
             foreach (CnPanelObj p in _viewStack) 
@@ -97,7 +106,7 @@ namespace Zby
                     break;
                 }
                 
-                ins.transform.SetParent(this._thisCanvas.transform, false);
+                ins.transform.SetParent(this._root.transform, false);
                 ins.transform.localPosition = Vector3.zero;
                 ins.transform.localScale = Vector3.one;
                 ins.transform.localRotation = Quaternion.identity;
@@ -111,7 +120,7 @@ namespace Zby
             T view = null;
             do
             {
-                Transform trans = this._thisCanvas.transform.Find(path);
+                Transform trans = this._root.transform.Find(path);
                 if ( null == trans){
                     break;
                 }
@@ -136,7 +145,7 @@ namespace Zby
             T view =null;// 
             do
             {
-                Transform trans = this._thisCanvas.transform.Find(path);
+                Transform trans = this._root.transform.Find(path);
                 if ( null == trans){
                     break;
                 }
@@ -266,7 +275,7 @@ namespace Zby
             }
             else
             {
-                ZLog.E(null, "{0} no view {1}_{2}", this._thisCanvas.name, view.GetName(), view.ZOrder);
+                ZLog.E(null, "{0} no view {1}_{2}", this._root.name, view.GetName(), view.ZOrder);
             }
             return false;// this.IsTop(view);
         }

@@ -73,6 +73,7 @@ public class LuaMain : MonoBehaviour
         if (quitDl != null){
             quitDl();
         }
+        luaenv.Tick();
         luaenv.Dispose();
     }
     

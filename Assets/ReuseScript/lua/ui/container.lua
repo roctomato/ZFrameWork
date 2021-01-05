@@ -21,10 +21,11 @@ return class {
     end,
 
     --将类class_name实例化到路径path上去，class_name最好为类似panel_base的类有 awake start update ondestory 函数
-    create_behaviour = function(self, path, class_name)
+    create_behaviour = function(self, path, class_name, ...)
         local go =  self:find_gameobject(path)
-        print(go)
-        local ins = CS.LuaNormalBehaiour.Attach(go,class_name)
+        local arg = {...}
+        --print(go, arg)
+        local ins = CS.LuaNormalBehaiour.CreateIns(go,class_name,arg)
         return ins
     end,
 

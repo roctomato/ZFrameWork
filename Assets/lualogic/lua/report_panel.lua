@@ -96,16 +96,20 @@ local card_scrollview = class {
         --cell:SetIniText("NoText", index){}
         log.trace("end")
     end,
- 
+
     awake = function (self, args)
         -- body
         log.info("in scroll awake")
         self.a = 0
+        if not self.fd   then
+            self.fd = args[1]
+            self.other_fd = args[2]
+        end
     end,
 
     update = function (self)
         self.a = self.a + 1
-        if ( self.a > 10 ) then
+        if ( self.a > 1000 ) then
             self.visible = false
             log.info("hide scroll ")
         end
@@ -143,8 +147,12 @@ return class {
         self.day =  self:init_child("dynamic", day_info)
         self.jia = self:init_child("dynamic/players/self", player_info)
         self.yi = self:init_child("dynamic/players/rival", player_info)
+
         self.jia_scrollview = self:init_child("dynamic/embattles/self", card_scrollview,'jia','yi')
-        self.yi_scrollview = self:init_child("dynamic/embattles/rival", card_scrollview, 'yi', 'jia')
+        self.jia_scrollview:attach()
+
+        self.yi_scrollview = self:create_behaviour("dynamic/embattles/rival", card_scrollview, 'yi', 'jia')
+        --self:attach_behaviour("dynamic/embattles/rival", self.yi_scrollview)
     end,
 
     click_Close = function(self)

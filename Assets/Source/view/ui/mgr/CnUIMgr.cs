@@ -40,15 +40,17 @@ namespace Zby
             {
                 if (m_Instance == null)
                 {
-                    m_Instance = new CnUIMgr();
+                    BaseCanvas cvs = new BaseCanvas("myui");
+                    m_Instance = new CnUIMgr(cvs.Main.gameObject);
                 }
                 return m_Instance;
             }
         }
 
-       LoaderInEditor _resLoader;
+        LoaderInEditor _resLoader;
+        
 
-        public CnUIMgr( ):base("myui", InitUIRootType.ByCreate)
+        public CnUIMgr( GameObject root):base(root)
         {
            _resLoader = new LoaderInEditor();
         }
@@ -71,7 +73,8 @@ namespace Zby
             {
                 if (m_Instance == null)
                 {
-                    m_Instance = new CnUIPathMgr();
+                    GameObject go = GameObject.Find("GUIRoot/Canvas");
+                    m_Instance = new CnUIPathMgr(go);
                 }
                 return m_Instance;
             }
@@ -79,7 +82,7 @@ namespace Zby
 
         SimpleLoader _resLoader;
 
-        public CnUIPathMgr( ):base("GUIRoot/Canvas", InitUIRootType.ByFind)
+        public CnUIPathMgr(GameObject root ):base(root)
         {
             _resLoader = new SimpleLoader();
         }

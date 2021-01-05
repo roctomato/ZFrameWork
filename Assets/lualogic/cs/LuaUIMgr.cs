@@ -4,7 +4,7 @@ using Zby;
 using XLua;
 
 [LuaCallCSharp]
-public class LuaUIMgr:  UIMgrBase
+public class LuaUIMgr:  LuaObjMgr
     {
         private static LuaUIMgr m_Instance;
         public static LuaUIMgr Instance
@@ -21,7 +21,8 @@ public class LuaUIMgr:  UIMgrBase
         {
             if (m_Instance == null)
             {
-                m_Instance = new LuaUIMgr(name, InitUIRootType.ByCreate);
+                BaseCanvas cvs = new BaseCanvas(name);
+                m_Instance = new LuaUIMgr(cvs.Main.gameObject);
             }
             return m_Instance;
         }
@@ -30,7 +31,8 @@ public class LuaUIMgr:  UIMgrBase
         {
             if (m_Instance == null)
             {
-                m_Instance = new LuaUIMgr(name, InitUIRootType.ByFind);
+                GameObject go = GameObject.Find(name);
+                m_Instance = new LuaUIMgr(go);
             }
             return m_Instance;
         }
@@ -39,13 +41,13 @@ public class LuaUIMgr:  UIMgrBase
         {
             if (m_Instance == null)
             {
-                string name="";
-                m_Instance = new LuaUIMgr(name, InitUIRootType.LateInit);
-                m_Instance.LoadCanvas(m_Instance.LoadCanvas);
+                
+                m_Instance = new LuaUIMgr( null);
+                m_Instance._root  = m_Instance.LoadCanvas().gameObject;
             }
             return m_Instance;
         }
-         public Canvas LoadCanvas(){
+        public  Canvas LoadCanvas(){
             Canvas ret = null;
             do{
                 string path ="GUIRoot"; 
@@ -69,42 +71,8 @@ public class LuaUIMgr:  UIMgrBase
             }while(false);
             return ret;
         }
-        public LuaTable LoadSimplePanel(string ui_res, string lua_cls, LuaTable param)
-        {
-            LuaPanelBase ins = LoadPanelShow<LuaPanelBase>(ui_res, lua_cls, param);
-            return ins.LuaClass;
-        }
-         
-        public LuaTable AttachSimplePanel(string ui_res, string lua_cls, bool show, LuaTable param)
-        {
-            LuaPanelBase ins = AttachPanel<LuaPanelBase>(ui_res,show, lua_cls, param);
-            return ins.LuaClass;
-        }
-
-        public LuaTable AttachPanel(string ui_res, string lua_cls, bool show, LuaTable param)
-        {
-            LuaViewBase ins = AttachPanelEx<LuaViewBase>(ui_res,show, lua_cls, param);
-            return ins.LuaClass;
-        }
-
-        public LuaTable LoadMonoPanel(string ui_res, string lua_cls, LuaTable param)
-        {
-            LuaViewBase ins = Load<LuaViewBase>(ui_res, lua_cls, param);
-            return ins.LuaClass;
-        }
-        public LuaTable LoadPanel(string ui_res, string lua_cls, bool asSimple, LuaTable param)
-        {
-            LuaTable ret = null;
-           
-            if (asSimple){
-                ret = LoadSimplePanel(ui_res, lua_cls, param);
-            }else{
-                ret = LoadMonoPanel(ui_res, lua_cls, param);
-            }
-               
-            return ret;
-        }
-        private LuaUIMgr( string name, InitUIRootType asPath):base(name, asPath)
+        
+        private LuaUIMgr( GameObject root):base(root)
         {
             _resLoader = new TmplLoaderBase("ui");
             _resLoader.LoadFunc = LoadRes;
