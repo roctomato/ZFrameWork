@@ -2,11 +2,7 @@
 local super = require("ui.panel_base")
 
 return class {
-    super = super, 
-
-    ctor = function (self)
-        super.ctor(self) -- 调用父类构造函数
-    end,
+    super = super,
 
     awake = function (self, args)
         -- 注册按钮点击事件

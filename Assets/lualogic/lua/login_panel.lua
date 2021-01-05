@@ -2,11 +2,7 @@
 local super = require("ui.panel_base")
 
 return class {
-    super = super, 
-    ctor = function (self)
-        print("构造")
-        self.a= 0
-    end,
+    super = super,
 
     awake = function (self, args)
         -- body

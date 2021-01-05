@@ -4,11 +4,6 @@ local super = require("ui.panel_base")
 return class {
     super = super, 
 
-    ctor = function (self)
-        super.ctor(self) -- 调用父类构造函数
-        print("构造")
-
-    end,
 
     awake = function (self, args)
         -- body

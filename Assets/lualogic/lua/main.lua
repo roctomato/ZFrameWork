@@ -46,8 +46,8 @@ function Main()
     --ui_mgr:LoadPanel("SDKPanel", "sdk_panel", true, {})
     --ui_mgr:LoadPanel("LoginGame", "login_panel", true, {})
     ui_mgr:LoadPanel("ScrollPanel", "scroll_panel", true, {'has monobahavor'})
-    --local panel =ui_mgr:LoadSimplePanel("FightReportPanel", "report_panel",  {'no monobahavor'})
-    --local panel =ui_mgr:LoadMonoPanel("FightReportFrame", "report_panel",  {'has monobahavor'})
+    ui_mgr:LoadSimplePanel("FightReportPanel", "report_panel",  {'no monobahavor'})
+    --ui_mgr:LoadMonoPanel("FightReportFrame", "report_panel",  {'has monobahavor'})
     --panel.visible = true
 
     --ui_mgr:LoadPanel("ReportSetFrame", "ui.panel_base", true, {'has monobahavor'})

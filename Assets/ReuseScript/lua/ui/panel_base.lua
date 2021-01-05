@@ -6,12 +6,9 @@ local log = logger.get("ui", "ui_panel")
 return class {
     super = container,
 
-    ctor = function (self)
+    ctor = function (self, trans)
+        container.ctor(self, trans)
         log.trace("in base panel ctor")
-    end,
-
-    oncreate =  function (self)
-        self.native=  self.mono.UIObj.transform
     end,
 
     -- 是否带MonoBehaviour都会调用

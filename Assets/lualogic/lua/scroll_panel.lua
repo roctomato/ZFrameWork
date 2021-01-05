@@ -50,9 +50,6 @@ local test_scrollview = class {
 return class {
     super = panel_base,
 
-    ctor = function (self)
-        panel_base.ctor(self) -- 调用父类构造函数
-    end,
 
     awake = function (self, args)
         self.scrollview = test_scrollview(self:find_gameobject("ScrollView").transform)

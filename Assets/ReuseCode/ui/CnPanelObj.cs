@@ -56,6 +56,7 @@ namespace Zby
          bool CanUnload(CnPanelObj view);
          bool DestoryView(CnPanelObj view);
          bool DoShow(CnPanelObj view);
+         bool DoHide(CnPanelObj view);
     }
 
     public abstract class CnPanelObj
@@ -98,18 +99,13 @@ namespace Zby
         {
             return _uiObj.name;
         }
-        public void Hide(  )
+        public bool Hide(  )
         {
-            this._uiObj.SetActive(  false );
+            return this._viewMgr.DoHide(this);
         }
         public bool Show()
         {
-            bool ret = this._viewMgr.DoShow(this);
-            if ( ret )
-            {
-                this._uiObj.SetActive(true);
-            }
-            return ret;
+            return this._viewMgr.DoShow(this);
         }
 
        

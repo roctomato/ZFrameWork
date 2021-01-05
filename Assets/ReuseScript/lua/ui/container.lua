@@ -14,7 +14,25 @@ return class {
     end,
 
     -- 功能函数
+
+    --将类class_type实例化到路径path上去
+    init_child = function(self, path, class_type,...)
+        return class_type(self:find_transform(path),...)
+    end,
+
+    --将类class_name实例化到路径path上去，class_name最好为类似panel_base的类有 awake start update ondestory 函数
+    create_behaviour = function(self, path, class_name)
+        local go =  self:find_gameobject(path)
+        print(go)
+        local ins = CS.LuaNormalBehaiour.Attach(go,class_name)
+        return ins
+    end,
+
     find_gameobject = function(self,path)
+        return self.native:Find(path).gameObject
+    end,
+
+    find_transform = function(self,path)
         return self.native:Find(path)
     end,
 

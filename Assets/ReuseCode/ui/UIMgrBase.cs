@@ -106,23 +106,64 @@ namespace Zby
             }while (false);
             return ins;
         }
+        public  T AttachPanelEx<T>(string path, bool show, params object[] args) where T : CnViewBase
+        {
+            T view = null;
+            do
+            {
+                Transform trans = this._thisCanvas.transform.Find(path);
+                if ( null == trans){
+                    break;
+                }
+                GameObject ins =  trans.gameObject;
+                if ( null == ins ){
+                    break;
+                }
+                
+                view = ins.AddComponent<T>();
+                if (view != null)
+                {
+                    WrapperCnViewBase panelObj =  new WrapperCnViewBase(view);
+                    if (panelObj != null){
+                        InitNewPanel(panelObj, ins, show, args );
+                    }
+                }
+            } while (false);
+            return view;
+        }
+        public T  AttachPanel<T>(string path, bool show, params object[] args) where T : CnPanelObj, new()
+        {
+            T view =null;// 
+            do
+            {
+                Transform trans = this._thisCanvas.transform.Find(path);
+                if ( null == trans){
+                    break;
+                }
+                GameObject ins =  trans.gameObject;
+                if ( null == ins ){
+                    break;
+                }
+                
+                view =  new T();
+                if (view != null)
+                {
+                    InitNewPanel(view, ins, show, args );
+                }
+            } while (false);
+            return view;
+        }
         public void InitNewPanel( CnPanelObj view,  GameObject ins, bool show, params object[] args )
         {
             view.InitArgs(_viewID, ins, this, args);
             _viewID++;
             if (show)
             {
-                CnPanelObj last_view = this.GetTopView();
-                this._viewStack.Add(view);
-                if (last_view != null)
-                {
-                    last_view.OnBehind(view);
-                }
+                DoShow(view);
             }
             else
             {
-                this._initViewSet.Add(view);
-                view.Hide();
+                DoHide(view);
             }
         }
         protected T LoadPanel<T>(string name, bool show, params object[] args) where T : CnPanelObj, new()
@@ -233,20 +274,42 @@ namespace Zby
         {
             bool ret = false;
             do{
-                if ( !this._initViewSet.Contains( view) )
-                {
-                    ZLog.E(null, "{0} no init view {1}_{2}", this._thisCanvas.name, view.GetName(), view.ZOrder);
-                    break;
-                }
                 CnPanelObj last_view = this.GetTopView();
                 this._viewStack.Add(view);
                 if (last_view != null)
                 {
                     last_view.OnBehind(view);
                 }
-                this._initViewSet.Remove(view);
+                 
+                if ( this._initViewSet.Contains( view) )
+                {
+                    this._initViewSet.Remove(view);
+                    //ZLog.E(null, "{0} no init view {1}_{2}", this._thisCanvas.name, view.GetName(), view.ZOrder);
+                    //break;
+                }
+                view.UIObj.SetActive(  true );
                 ret = true;
             }while(false);
+            return ret;
+        }
+
+        public bool DoHide(CnPanelObj view)
+        {
+            bool ret = false;
+
+            if ( this._viewStack.Contains(view) ){
+                bool isTop = this.IsTop(view);
+                this._viewStack.Remove(view);
+                if (isTop)
+                {
+                    CnPanelObj next = this.GetTopView();
+                    if (next != null)
+                        next.DoBring2Top(view);
+                }
+            }
+            this._initViewSet.Add(view);
+            view.UIObj.SetActive(  false );
+            ret = true;
             return ret;
         }
         ///////////////////////////////////////////

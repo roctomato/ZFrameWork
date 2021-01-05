@@ -98,8 +98,9 @@ local function define_category(module, category)
         end, 
 
         error = function (...)
-            if out_level and out_level.rawValue <= levels.ERROR.rawValue and is_category_open(category) then 
-                app_logger.LogError(__string(module, category, concat_all(...)))
+            if out_level and out_level.rawValue <= levels.ERROR.rawValue and is_category_open(category) then
+                local log_txt = __string(module, category, concat_all(...)).. "\n" .. debug.traceback()
+                app_logger.LogError( log_txt)
             end
         end, 
 

@@ -31,7 +31,7 @@ public class LuaNormalBehaiour :  MonoBehaviour
     }
     public LuaTable  OnLoad(string stript_name, LuaTable param) 
     {   
-        luaBh = new LuaBehaviour();
+        luaBh = new LuaBehaviour( this.transform);
         return luaBh.DoLoad<LuaNormalBehaiour>( stript_name, param, this);
     }  
     public void DoUnload()

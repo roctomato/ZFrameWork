@@ -14,7 +14,7 @@ public class LuaPanelBase : CnPanelObj
  
     public override void OnLoad(params object[] args) 
     { 
-        luaBh = new LuaBehaviour();
+        luaBh = new LuaBehaviour( UIObj.transform);
         string stript_name = args[0] as string;
         LuaTable param = null;
         if (args.Length > 1) param = args[1] as LuaTable;

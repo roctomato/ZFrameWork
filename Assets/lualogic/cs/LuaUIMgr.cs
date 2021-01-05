@@ -74,6 +74,19 @@ public class LuaUIMgr:  UIMgrBase
             LuaPanelBase ins = LoadPanelShow<LuaPanelBase>(ui_res, lua_cls, param);
             return ins.LuaClass;
         }
+         
+        public LuaTable AttachSimplePanel(string ui_res, string lua_cls, bool show, LuaTable param)
+        {
+            LuaPanelBase ins = AttachPanel<LuaPanelBase>(ui_res,show, lua_cls, param);
+            return ins.LuaClass;
+        }
+
+        public LuaTable AttachPanel(string ui_res, string lua_cls, bool show, LuaTable param)
+        {
+            LuaViewBase ins = AttachPanelEx<LuaViewBase>(ui_res,show, lua_cls, param);
+            return ins.LuaClass;
+        }
+
         public LuaTable LoadMonoPanel(string ui_res, string lua_cls, LuaTable param)
         {
             LuaViewBase ins = Load<LuaViewBase>(ui_res, lua_cls, param);

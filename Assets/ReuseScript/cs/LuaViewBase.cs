@@ -18,7 +18,7 @@ public class LuaViewBase : CnViewBase
     
     public override void OnLoad(params object[] args) //创建时调用，会在start前调用
     {     
-        luaBh = new LuaBehaviour();
+        luaBh = new LuaBehaviour(this.transform);
         string stript_name = args[0] as string;
         LuaTable param = null;
         if (args.Length > 1) param = args[1] as LuaTable;

@@ -96,14 +96,26 @@ local card_scrollview = class {
         --cell:SetIniText("NoText", index){}
         log.trace("end")
     end,
+ 
+    awake = function (self, args)
+        -- body
+        log.info("in scroll awake")
+        self.a = 0
+    end,
+
+    update = function (self)
+        self.a = self.a + 1
+        if ( self.a > 10 ) then
+            self.visible = false
+            log.info("hide scroll ")
+        end
+    end,
+
 }
 
 return class {
     super = panel_base,
 
-    ctor = function (self)
-        panel_base.ctor(self) -- 调用父类构造函数
-    end,
 
     awake = function (self, args)
         self:init_ctrl()
@@ -128,11 +140,11 @@ return class {
         }
         self:regClickEvents(clickEvents)
 
-        self.day = day_info(self:find_gameobject("dynamic").transform)
-        self.jia = player_info(self:find_gameobject("dynamic/players/self").transform)
-        self.yi = player_info(self:find_gameobject("dynamic/players/rival").transform)
-        self.jia_scrollview = card_scrollview(self:find_gameobject("dynamic/embattles/self").transform,'jia','yi')
-        self.yi_scrollview = card_scrollview(self:find_gameobject("dynamic/embattles/rival").transform,'yi','jia')
+        self.day =  self:init_child("dynamic", day_info)
+        self.jia = self:init_child("dynamic/players/self", player_info)
+        self.yi = self:init_child("dynamic/players/rival", player_info)
+        self.jia_scrollview = self:init_child("dynamic/embattles/self", card_scrollview,'jia','yi')
+        self.yi_scrollview = self:init_child("dynamic/embattles/rival", card_scrollview, 'yi', 'jia')
     end,
 
     click_Close = function(self)
