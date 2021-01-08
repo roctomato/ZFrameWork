@@ -11,6 +11,7 @@ function Main()
 
     log("from lua logic start.")
     game_global.ui_mgr:LoadPanel("Chat/ChatPanel", "chat_panel", true, {'has monobahavor'})
+    --game_global.ui_mgr:LoadPanel("Chat/ChatPanelAll", "chat_panel", true, {'has monobahavor'})
 end
 
 -- 销毁前调用
