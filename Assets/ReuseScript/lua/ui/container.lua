@@ -1,11 +1,12 @@
 local button = require("ui.button")
 local text   = require("ui.text")
 local input_field = require("ui.inputfield")
+local toggle = require("ui.toggle")
 local widget = require("ui.widget")
 
 local log = logger.get("ui", "container")
 
-return class {
+local _class = class {
     typename = "Container", --容器
     super = widget,
 
@@ -14,6 +15,13 @@ return class {
     end,
 
     -- 功能函数
+
+    set_child_visible = function (self, path, visible)
+        local go = self:find_gameobject(path)
+        if go then
+            go:SetActive(visible)
+        end
+    end,
 
     --将类class_type实例化到路径path上去
     init_child = function(self, path, class_type,...)
@@ -44,6 +52,24 @@ return class {
             cmpt = obj:GetComponent(type)
         end
         return cmpt
+    end,
+
+    find_widget = function( self, path)
+        local input
+        local obj = self:find_transform(path)
+        if obj then
+            input = widget(obj)
+        end
+        return input
+    end,
+
+    find_toggle = function( self, path)
+        local input
+        local obj = self:find(path,"Toggle")
+        if obj then
+            input = toggle(obj)
+        end
+        return input
     end,
 
     find_input = function( self, path)
@@ -242,3 +268,13 @@ return class {
         end
     end,
 }
+
+_class.find_container = function (self, path)
+    local input
+    local obj = self:find_transform(path)
+    if obj then
+        input = _class(obj)
+    end
+    return input
+end
+return _class

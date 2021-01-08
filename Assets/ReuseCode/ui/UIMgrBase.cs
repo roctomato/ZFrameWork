@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 
@@ -91,28 +92,34 @@ namespace Zby
         
         GameObject InitRes(string name )
         {
+            return InitResEx(name, _root.transform);
+        }
+        public GameObject InitResEx(string name, Transform parent)
+        {
             GameObject ins = null;
-            do{
+            do
+            {
                 GameObject go = this.FindUIRes(name);
                 if (null == go)
                 {
                     ZLog.E(null, "no ui {0}", name);
                     break;
                 }
-                ins =  GameObject.Instantiate(go) as GameObject;
+                ins = GameObject.Instantiate(go) as GameObject;
                 if (ins == null)
                 {
                     ZLog.E(null, "{0} Instantiate fail", name);
                     break;
                 }
-                
-                ins.transform.SetParent(this._root.transform, false);
+                string[] strList = name.Split(new Char[] { '/', }, StringSplitOptions.RemoveEmptyEntries);
+                string new_name = strList[strList.Length - 1];
+                ins.transform.SetParent(parent, false);
                 ins.transform.localPosition = Vector3.zero;
                 ins.transform.localScale = Vector3.one;
                 ins.transform.localRotation = Quaternion.identity;
-                ins.name = name;
+                ins.name = new_name;
                 ZLog.I(null, "Load{0} ok", name);
-            }while (false);
+            } while (false);
             return ins;
         }
         public  T AttachPanelEx<T>(string path, bool show, params object[] args) where T : CnViewBase
