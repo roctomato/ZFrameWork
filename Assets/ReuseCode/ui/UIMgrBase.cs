@@ -8,50 +8,14 @@ using UnityEngine;
 
 namespace Zby
 {
-    public enum InitUIRootType
+  
+    public class UIMgrBase : IViewMgr
     {
-        [Description("创建")]
-        ByCreate,
-
-        [Description("场景中查找")]
-        ByFind,
-
-        [Description("延迟初始化")]
-        LateInit,
-
-        
-    }
-    public class UIMgrBase : /*BaseCanvas,*/ IViewMgr
-    {
-        //protected BaseCanvas _baseCanvas;
-        //protected Canvas _thisCanvas;
         protected GameObject _root;
         protected List<CnPanelObj> _viewStack;
         protected HashSet<CnPanelObj> _initViewSet;
 
         private int _viewID;
-        /*
-        public delegate Canvas GetCanvas();
-
-        public UIMgrBase( string name, InitUIRootType initType)
-        {
-            if ( initType == InitUIRootType.ByFind){
-                GameObject go = GameObject.Find(name);
-                _thisCanvas = go.GetComponent<Canvas>();
-            }else if ( initType == InitUIRootType.ByCreate) {
-                _baseCanvas = new BaseCanvas(name);
-                _thisCanvas = _baseCanvas.Main;
-            }
-            _viewStack = new List<CnPanelObj>();
-            _initViewSet = new HashSet<CnPanelObj>();
-            _viewID = 0;
-        }
-
-        public bool LoadCanvas( GetCanvas dg)
-        {
-            _thisCanvas = dg();
-            return _thisCanvas != null;
-        }*/
 
         public UIMgrBase( GameObject root)
         {
@@ -111,14 +75,14 @@ namespace Zby
                     ZLog.E(null, "{0} Instantiate fail", name);
                     break;
                 }
-                string[] strList = name.Split(new Char[] { '/', }, StringSplitOptions.RemoveEmptyEntries);
+                string[] strList = name.Split(new Char[] { '/','\\' }, StringSplitOptions.RemoveEmptyEntries);
                 string new_name = strList[strList.Length - 1];
                 ins.transform.SetParent(parent, false);
                 ins.transform.localPosition = Vector3.zero;
                 ins.transform.localScale = Vector3.one;
                 ins.transform.localRotation = Quaternion.identity;
                 ins.name = new_name;
-                ZLog.I(null, "Load{0} ok", name);
+                ZLog.I(null, "Load {0} ok", name);
             } while (false);
             return ins;
         }

@@ -133,18 +133,21 @@ local _class = class {
         end
     end,
 
+    set_text = function(self,  path, txt)
+        local txt_ctrl =self:find_text(path)
+        if txt_ctrl then
+            txt_ctrl.text = txt
+        else
+            log.error(" not such widget", path)
+        end
+    end,
+
     setWidgetTextValues = function(self,  text_paths_value)
         if type(text_paths_value) == "table" then
             for _, item in pairs(text_paths_value) do
                 local path = item[1]
                 local txt = item[2]
-                local txt_ctrl =self:find_text(path)
-                if txt_ctrl then
-                    txt_ctrl.text = txt
-                else
-                    log.error(" not such widget", path)
-                end
-                --self:init_inner_text(path)
+                self:set_text(path,txt)
             end
         else
             log.error("init button failed: text_paths type err", type(text_paths))
