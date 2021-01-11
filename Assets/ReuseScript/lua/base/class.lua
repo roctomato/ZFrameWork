@@ -1,278 +1,150 @@
 --[[
-    super 基类 (可以是table, 表示存在多个基类)
-    ctor 构造函数, 不提供是自动产生一个空白的
+    用lua实现的模拟类
+    实现了
+    1.类类型的定义，以及类类型的实例化
+    2.单继承以及多继承
+    3.实现多态，即子类的同名函数覆盖父类的同名函数
 
-    类关键字
-    __index 类本身的查找表
-    new 实例创建方法, 或者也可以通过 __call 元方法实例化
+    super 单继承基类
+    supers 多个父类写到一个表中
 
-    实例关键字
-    __base 包装了一个外部实例, 通常用于扩展native class 实例
+    ctor 构造函数, 创建类实例后会调用此函数，如果子类没实现此函数，则会依次查找所有父类们的构造函数，如果找到只调用找到的第一个构造函数 
+         没找到就不调用。建议所以类成员变量在此函数中定义并初始化
 
 代码范例
-    local uobject = class {}
-    assert(uobject.new().class == uobject)
-    assert(uobject == uobject.class)
+    定义类类型
+    local class_type = class{
+        ctor = function ( self, a, name )
+            self.a = a
+            self.name = name
+            print('in class_type ctor ', self.a, self.name )
+        end,
 
-    local c1 = class { typename = "c1" }
-    local c2 = class { typename = "c2", super = c1 }
-    local c3 = class { typename = "c3", super = c2 }
-    local d1 = class { typename = "d1" }
-    local d2 = class { typename = "d2" }
+        log = function ( self )
+             print('in class_type ctor ', self.a, self.name )
+        end,
 
-    local e1 = class { typename = "e1", supers = {d1, c2} }
-    local e2 = class { typename = "e2", super = e1 }
-
-    print(c3:isSubClassOf(c1))
-    print(c2:isSubClassOf(c1))
-    print(c3():isSubClassOf(c1))
-
-    print(d1:isSubClassOf(c2))
-    print(d1():isSubClassOf(c2))
-
-    print(c1:isSubClassOf(c2))
-    print(c1():isSubClassOf(c2))
-
-    print("e1")
-    print(e1:isSubClassOf(d2))
-    print(e1:isSubClassOf(d1))
-    print(e1:isSubClassOf(c1))
-    print(e1:isSubClassOf(c2))
-
-    print("e2")
-    print(e2:isSubClassOf(d2))
-    print(e2:isSubClassOf(d1))
-    print(e2:isSubClassOf(c1))
-    print(e2:isSubClassOf(c2))
-
-    print(e2:isSubClassOf(class.class))
-
-    local fc1 = class {
-        ctor = function (self)
-            print("构造")
-        end, 
-
-        finalize = function (self)
-            print("析构") -- 在lua回收此对象时触发
-        end, 
     }
 
-    local f1 = fc1()
-    f1 = nil
-    collectgarbage()
+    local ins = class_type(11,'test') --实例化
+
+    local class_b = class {
+
+    }
 ]]
-local __run_features = function (cls, feature)
-    if type(feature) == "function" then 
-        local status, results = pcall(function (c, f) f(c) end, cls, feature)
-        if not status then 
-            print("add feature failed", cls, feature)
-        end
+
+--获取父类列表
+local get_super_class = function( cls )
+    if cls.supers ~= nil then
+        return cls.supers
+    elseif cls.super ~= nil then
+        return { cls.super }
     end
+    return nil
 end
 
-local __runtime = {}
-local __class = setmetatable({}, {
-    __index = __runtime, 
+--获取类模板中名为key的值(主要用来获得函数)
+local get_func = function ( cls, key )
+    local ret = cls[key]
+    if  not ret then         
+        local supers = get_super_class(cls)
+        if  supers then
+            for _,super in ipairs(supers)do
+                ret = super[key]
+                if ret then
+                    break
+                end
+            end 
+        end   
+    end
+    return ret
+end
 
-    -- 创建 class 
-    __call = function (self, cls)
-        local cls_meta = {}
-
-        cls_meta.__call = cls.__call
-        if cls.__index ~= nil then 
-            -- 如果 class 定义了自己的 __index 尝试代理未知的key请求
-            cls_meta.__index = function (self, key)
-                local val = cls[key]
-                if val ~= nil then 
-                    if type(val) == "table" then
-                        local getter = val.getter
-                        if getter then 
-                            return getter(self)
-                        end
-                    end
-                    return val
-                end
-                val = cls.__index(self, key)
-                if val ~= nil then 
-                    return val
-                end
-                local base = rawget(self, "__base")
-                if base then
-                    if cls.__unsafe then 
-                        return base[key]
-                    else
-                        local status, results = pcall(function (t, k) return t[k] end, base, key) 
-                        if status then 
-                            return results
-                        end
-                    end
-                end
-                return nil
-            end
-        else
-            cls_meta.__index = function (self, key)
-                local val = cls[key]
-                if val ~= nil then 
-                    if type(val) == "table" then
-                        local getter = val.getter
-                        if getter then 
-                            return getter(self)
-                        end
-                    end
-                    return val
-                end
-                local base = rawget(self, "__base")
-                if base then
-                    if cls.__unsafe then 
-                        return base[key]
-                    else
-                        local status, results = pcall(function (t, k) return t[k] end, base, key) 
-                        if status then 
-                            return results
-                        end
-                    end
-                end
-                return nil
-            end
+--判断cls是否是cls_parent的子类
+local cls_is_subclassof 
+cls_is_subclassof = function ( cls, cls_parent)
+    local supers = get_super_class(cls)
+    if not supers then
+        return false
+    end
+  
+    for _,super in ipairs(supers) do
+        if cls_parent == super then
+            ret = true
+            break
         end
+        ret = cls_is_subclassof(super, cls_parent)
+        if ret then
+            break
+        end
+    end 
+    
+    return ret 
+end
 
-        cls_meta.__newindex = function (self, key, value)
-            local func = cls[key]
+--创建类实例 cls类定义 creator为cls类的创建类
+local new_ins = function ( cls, creator, ... )
+    local ins = setmetatable({}, 
+    {
+        __index=function ( self, key )
+            local ret = get_func(cls,key)
+            if ret and type(ret) == "table" then
+                local getter = ret.getter
+                if getter then 
+                    ret = getter(self)
+                end
+            end
+            return ret
+        end,
+
+        __newindex = function (self, key, value)
+            local func = get_func(cls,key)
             if type(func) == "table" then
                 local setter = func.setter
                 if type(setter) == "function" then  
-                    --print(key,value)
                     setter(self, value) 
                     return
                 end
-                if func.getter ~= nil then
-                    -- 只有getter, 没有setter, 视作只读属性
-                    return  
-                end
-            end
-            -- HH, 2017.2.6, 尝试操作本地类的属性赋值操作
-            -- 注意，如果字段本身存在，但实际执行出现错误，这里逻辑会继续往下，导致在实例table上创建key，
-            -- 导致下一次 index 得到的是 instance table 上的 value
-            local base = rawget(self, "__base")
-            if base then
-                local status, results = pcall(function (t, k, v) t[k] = v end, base, key, value) 
-                if status then 
-                    return 
-                end
             end
             rawset(self, key, value)
-        end
+        end,
+    })
 
-        local extensions = cls.extensions
-        if extensions then 
-            local typename = type(extensions)
-            if typename == "string" then 
-                local extends = dofile(extensions)
-                for k, v in pairs(extends) do
-                    cls[k] = v
-                end
-            elseif typename == "table" then 
-                for _, extension in ipairs(extensions) do
-                    local extends = dofile(extension)
-                    for k, v in pairs(extends) do 
-                        cls[k] = v
-                    end
-                end
-            end
-        end
+    ins.isSubClassOf = function (self, cls_type )
+        return cls_is_subclassof(cls, cls_type)
+    end
 
-        local cls_new = function(...)
-            local cls_inst = {}
-            local instance = setmetatable(cls_inst, cls_meta)
-            instance:ctor(...)
-            return instance
-        end
+    ins.creator = creator
+    if ins.ctor then
+        ins:ctor(...)
+    end
+    return ins
+end
 
-        if cls.supers then
-            local supers = cls.supers
-            setmetatable(cls, {
-                __index = function(_, key)
-                    for i = 1, #supers do
-                        local super_val = supers[i][key]
-                        if super_val then return super_val end
-                    end
-                end, 
-                __call = function (self, ...)
-                    return cls_new(...)
-                end, 
-            })
-        elseif cls.super then 
-            setmetatable(cls, { 
-                __index = cls.super,
-                __call = function (self, ...)
-                    return cls_new(...)
-                end, 
-            })
-        else
-            cls.super = __runtime.class
-            setmetatable(cls, { 
-                __index = __runtime.class, 
-                __call = function (self, ...)
-                    return cls_new(...)
-                end, 
-            })  
-        end
+-- 生成cls类的创建类
+local class = function ( cls )
+    
+    local cls_creator =setmetatable({},
+    {
+        __call=function (self, ... )
+            return new_ins(cls, self, ...)
+        end,
 
-        if not cls.tostring then 
-            local typename = cls["typename"]
-            if typename ~= nil then 
-                cls.tostring = function (self)
-                    return typename .. ":" .. tostring(self)
-                end
-            else
-                cls.tostring = tostring
-            end
-        end
+        __index =function (self, key )
+            return get_func(cls,key)
+        end,
+    })
 
-        cls.class = cls
-        cls.new = cls_new
+    cls_creator.class = cls
 
-        if cls.__features then 
-            if type(cls.__features) == "table" then 
-                for k, v in ipairs(cls.__features) do 
-                    __run_features(cls, v)
-                end
-            else
-                __run_features(cls, cls.__features)
-            end
-        end
-        return cls
-    end, -- end of class __call
-})
+    cls_creator.isSubClassOf = function (self, cls_type )
+        return cls_is_subclassof(cls, cls_type)
+    end
 
-__runtime.class = __class {
-    ctor = function (self)
-    end, 
+    cls_creator.new = function ( ... )
+        return new_ins(cls,cls_creator, ...)
+    end
+    return cls_creator
+end
 
-    -- 是否是一个类定义
-    isClass = function (self)
-        return rawget(self, "class")
-    end, 
-
-    -- 是否是一个类实例
-    isClassInstance = function (self) 
-        return rawget(self, "class") == nil and self.class ~= nil
-    end, 
-
-    -- 是否从指定类继承 (实例与类型调用该接口的方式一致)
-    isSubClassOf = function (self, other)
-        if self.class.supers then 
-            for _, super_class in ipairs(self.class.supers) do 
-                if super_class == other or (super_class and super_class:isSubClassOf(other)) then 
-                    return true
-                end
-            end
-            return false
-        else
-            local super_class = self.class.super
-            return super_class == other or (super_class and super_class:isSubClassOf(other) or false)
-        end
-    end, 
-}
-
-return __class
+return class
