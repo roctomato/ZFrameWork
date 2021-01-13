@@ -250,10 +250,10 @@ local _class = class {
         if rst then
             btn_name = utility.lastStringOf( btn_path, "/")
         end
-
-        local cb = host["click_" .. btn_name]
+        local func_name = "click_" .. btn_name
+        local cb = host[func_name]
         if not cb then
-            log.error("register event failed: not such function", cb)
+            log.error("register event failed: not such function", func_name)
             return false
         end
 

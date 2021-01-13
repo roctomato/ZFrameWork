@@ -13,9 +13,9 @@ public class LuaMain : MonoBehaviour
     LuaEnv luaenv ;
     float lastGCTime = 0;
     float GCInterval = 1;//1 second 
-    OnQuit quitDl=null;
     LuaCustomLoader _customLoader;
-    
+
+    public event OnQuit quitDl;
 
     static LuaMain instance;
 
@@ -24,7 +24,8 @@ public class LuaMain : MonoBehaviour
         if ( null == instance){
             instance = host.AddComponent<LuaMain>();
             instance.luaenv = new LuaEnv();
-            instance.quitDl = cb;
+            if (cb != null)
+                instance.quitDl += cb;
             instance.GCInterval = gcIns;
             instance._customLoader = new LuaCustomLoader();
         } 
@@ -70,9 +71,9 @@ public class LuaMain : MonoBehaviour
 
     void OnApplicationQuit()
     {
-        if (quitDl != null){
+        if (quitDl != null)
             quitDl();
-        }
+        
         luaenv.Tick();
         luaenv.Dispose();
     }

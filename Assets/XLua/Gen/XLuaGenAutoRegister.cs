@@ -22,6 +22,12 @@ namespace XLua.CSObjectWrap
         static void wrapInit0(LuaEnv luaenv, ObjectTranslator translator)
         {
         
+            translator.DelayWrapLoader(typeof(ChatBubbleFrame), ChatBubbleFrameWrap.__Register);
+        
+        
+            translator.DelayWrapLoader(typeof(ChatLuaUIMgr), ChatLuaUIMgrWrap.__Register);
+        
+        
             translator.DelayWrapLoader(typeof(LuaUIMgr), LuaUIMgrWrap.__Register);
         
         
@@ -41,6 +47,9 @@ namespace XLua.CSObjectWrap
         
         
             translator.DelayWrapLoader(typeof(LuaViewBase), LuaViewBaseWrap.__Register);
+        
+        
+            translator.DelayWrapLoader(typeof(LuaWebSocket), LuaWebSocketWrap.__Register);
         
         
             translator.DelayWrapLoader(typeof(object), SystemObjectWrap.__Register);
@@ -165,6 +174,10 @@ namespace XLua.CSObjectWrap
         
             translator.DelayWrapLoader(typeof(XLuaTest.Foo1Parent), XLuaTestFoo1ParentWrap.__Register);
         
+        }
+        
+        static void wrapInit1(LuaEnv luaenv, ObjectTranslator translator)
+        {
         
             translator.DelayWrapLoader(typeof(XLuaTest.Foo2Parent), XLuaTestFoo2ParentWrap.__Register);
         
@@ -174,10 +187,6 @@ namespace XLua.CSObjectWrap
         
             translator.DelayWrapLoader(typeof(XLuaTest.Foo2Child), XLuaTestFoo2ChildWrap.__Register);
         
-        }
-        
-        static void wrapInit1(LuaEnv luaenv, ObjectTranslator translator)
-        {
         
             translator.DelayWrapLoader(typeof(XLuaTest.Foo), XLuaTestFooWrap.__Register);
         

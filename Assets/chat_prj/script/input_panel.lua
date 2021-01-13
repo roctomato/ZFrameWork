@@ -26,7 +26,7 @@ return  class {
 
     click_ConfirmButton = function (self)
         log( self.input_path.text)
-        game_global.ui_mgr:LoadMonoPanel(self.input_path.text, "escape_panel",{'param'})
+        game_global.ui_mgr:LoadMonoPanel(self.input_path.text, "ui.escape_panel",{'param'})
         --game_global.ui_mgr:LoadSimplePanel(self.input_path.text, "escape_panel",{'param'})
     end,
 

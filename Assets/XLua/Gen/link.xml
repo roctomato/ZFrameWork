@@ -3,13 +3,16 @@
 <linker>
 
 	<assembly fullname="Assembly-CSharp">
-	    <type fullname="LuaUIMgr" preserve="all"/>
+	    <type fullname="ChatBubbleFrame" preserve="all"/>
+		<type fullname="ChatLuaUIMgr" preserve="all"/>
+		<type fullname="LuaUIMgr" preserve="all"/>
 		<type fullname="ScrollView" preserve="all"/>
 		<type fullname="SingleScrollView" preserve="all"/>
 		<type fullname="LuaMain" preserve="all"/>
 		<type fullname="LuaNormalBehaiour" preserve="all"/>
 		<type fullname="LuaPanelBase" preserve="all"/>
 		<type fullname="LuaViewBase" preserve="all"/>
+		<type fullname="LuaWebSocket" preserve="all"/>
 		<type fullname="Tutorial.BaseClass" preserve="all"/>
 		<type fullname="Tutorial.TestEnum" preserve="all"/>
 		<type fullname="Tutorial.DerivedClass" preserve="all"/>

@@ -21,12 +21,13 @@ namespace XLua.CSObjectWrap
         {
 			ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			System.Type type = typeof(LuaMain);
-			Utils.BeginObjectRegister(type, L, translator, 0, 3, 0, 0);
+			Utils.BeginObjectRegister(type, L, translator, 0, 4, 0, 0);
 			
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "InitZipLoader", _m_InitZipLoader);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "InitNormalFileLoader", _m_InitNormalFileLoader);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "StartLua", _m_StartLua);
 			
+			Utils.RegisterFunc(L, Utils.METHOD_IDX, "quitDl", _e_quitDl);
 			
 			
 			
@@ -250,6 +251,40 @@ namespace XLua.CSObjectWrap
         
 		
 		
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _e_quitDl(RealStatePtr L)
+        {
+		    try {
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+			    int gen_param_count = LuaAPI.lua_gettop(L);
+			LuaMain gen_to_be_invoked = (LuaMain)translator.FastGetCSObj(L, 1);
+                LuaMain.OnQuit gen_delegate = translator.GetDelegate<LuaMain.OnQuit>(L, 3);
+                if (gen_delegate == null) {
+                    return LuaAPI.luaL_error(L, "#3 need LuaMain.OnQuit!");
+                }
+				
+				if (gen_param_count == 3)
+				{
+					
+					if (LuaAPI.xlua_is_eq_str(L, 2, "+")) {
+						gen_to_be_invoked.quitDl += gen_delegate;
+						return 0;
+					} 
+					
+					
+					if (LuaAPI.xlua_is_eq_str(L, 2, "-")) {
+						gen_to_be_invoked.quitDl -= gen_delegate;
+						return 0;
+					} 
+					
+				}
+			} catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+			LuaAPI.luaL_error(L, "invalid arguments to LuaMain.quitDl!");
+            return 0;
+        }
+        
 		
 		
     }
