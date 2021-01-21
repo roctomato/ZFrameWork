@@ -67,7 +67,7 @@ cls_is_subclassof = function ( cls, cls_parent)
     if not supers then
         return false
     end
-  
+	local ret = false
     for _,super in ipairs(supers) do
         if cls_parent == super then
             ret = true

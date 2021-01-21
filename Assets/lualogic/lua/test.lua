@@ -14,9 +14,9 @@ ui_mgr = CS.LuaUIMgr.InitByCreate('myui')
 function Main()
     log("from lua logic start.")
 
-    --ui_mgr:LoadSimplePanel('Panel', "test_websocket_panel" )
+    ui_mgr:LoadSimplePanel('Panel', "test_websocket_panel" )
 
-    ui_mgr:LoadSimplePanel('InputPanel', "test_input" )
+    --ui_mgr:LoadSimplePanel('InputPanel', "test_input" )
     --ui_mgr:LoadSimplePanel('InputPanel', "ui.panel_base" )
 end
 
