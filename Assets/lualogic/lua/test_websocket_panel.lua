@@ -14,7 +14,7 @@ return class {
         local path_values={
             {'Btn1/Text', 'connect'},
             {'Btn2/Text', 'disconnect'},
-            {'Btn3/Text', 'Ping'},
+            {'Btn3/Text', 'Send'},
         }
         self:setWidgetTextValues(path_values)
 

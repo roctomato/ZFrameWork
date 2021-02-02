@@ -11,7 +11,7 @@ function Main()
 
     log("from lua logic start.")
     game_global.ui_mgr:LoadSimplePanel("Common/Dialog/DoubleButtonInputDialog", "input_panel",{'param'})
-    --game_global.ui_mgr:LoadMonoPanel("Common/Dialog/DoubleButtonInputDialog", "input_panel",{'param'})
+    game_global.ui_mgr:LoadMonoPanel("Chat/ChatPanelAll", "ui.escape_panel",{'param'})
 
 end
 
