@@ -104,9 +104,10 @@ class WebSocketMgr:
     def Remove( self, wsc ):
         del self.all_client[wsc._cid]
         
-    def SendAllText( self, txt):
+    def SendAllText( self, txt, except_cl=None):
         for wsc in self.all_client.values():
-            wsc.SendText(txt)
+            if except_cl != wsc:
+                wsc.SendText(txt)
 
     def FindClient( self, cid):
         try:

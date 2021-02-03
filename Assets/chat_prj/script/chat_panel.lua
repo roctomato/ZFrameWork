@@ -100,13 +100,8 @@ return class {
     
     click_SendButton = function(self)
         log.info("click", self._iptChatInputField.text)
-        --local trans =ui_mgr:InitResEx('Chat/FriendChatBubbleFrame', self.ChatBubbleGrid.native).transform
-        --local chat_item = ChatItem(trans, self._iptChatInputField.text)
-        --local txt = game_global.name .. '\n' .. self._iptChatInputField.text
-        self:show_self_content( self._iptChatInputField.text, false)
+        self:send_chat(self._iptChatInputField.text)
         self._iptChatInputField.text=''
-        --table.insert (self.chat_list, chat_item)
-        --self:UpdateChatBubbleGrid()
     end,
 
     UpdateChatBubbleGrid = function(self)
@@ -120,10 +115,38 @@ return class {
     end,
 
     --websocket event
+    handle_history = function (self, param)
+        for _,v in ipairs(param) do
+            local name = v[1]
+            local msg  = v[2]
+            if name == game_global.name then
+                self:show_self_content( msg, false)
+            else
+                self:show_chat_content(name, msg)
+            end
+        end
+    end,
+
+    handle_chat_ntf = function (self, param)
+        local name = param[1]
+        local msg  = param[2]
+        if name == game_global.name then
+            self:show_self_content( msg, false)
+        else
+            self:show_chat_content(name, msg)
+        end
+    end,
+
+    send_chat = function (self, msg)
+        local msg ={method='chat',param = msg}
+        self.ws:SendText(json.encode(msg))
+    end,
+
     send_register=function (self)
         local msg ={method='register',param ={name=game_global.name }}
         self.ws:SendText(json.encode(msg))
     end,
+
     OnOpen= function(self, url)
         log('on open', url)
         self:send_register()
@@ -139,5 +162,7 @@ return class {
 
     OnTxtMsg = function(self, msg, count)
         log( 'on text msg', msg, count)
+        local msg = json.decode(msg)
+        self['handle_'..msg.method](self, msg.param)
     end,
 }
