@@ -11,11 +11,22 @@ using Zby;
 public class LuaViewBase : CnViewBase
 {
     LuaBehaviour luaBh;
-    
+
+    float interval= 0.33f;
+    float lastUpdateStamp = 0;
+    bool  stopUpdate = false;
+
     public LuaTable LuaClass{
        get{ return luaBh.scriptEnv;}
     }
-    
+    public void StopUpdate(bool stop)
+    {
+        stopUpdate = stop;
+    }
+    public void SetInterval(float v)
+    {
+        interval = v;
+    }
     public override void OnLoad(params object[] args) //创建时调用，会在start前调用
     {     
         luaBh = new LuaBehaviour(this.transform);
@@ -36,7 +47,23 @@ public class LuaViewBase : CnViewBase
     // Update is called once per frame
     void Update()
     {
-        luaBh.OnUpdate();
+        do
+        {
+            float stamp = Time.realtimeSinceStartup;
+            if (stopUpdate)
+            {
+                break;
+            }
+            
+            if ( stamp - lastUpdateStamp < interval)
+            {
+                break;
+            }
+
+            luaBh.OnUpdate(stamp);
+            lastUpdateStamp = stamp;
+        } while (false);
+       
     }
 
     void OnDestroy()

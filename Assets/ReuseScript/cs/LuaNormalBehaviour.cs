@@ -72,7 +72,7 @@ public class LuaNormalBehaiour :  MonoBehaviour
     }  
     public void DoUnload()
     {
-        GameObject.DestroyImmediate(this.gameObject);
+        GameObject.Destroy(this.gameObject);
     }
 
     void Start()
@@ -83,7 +83,7 @@ public class LuaNormalBehaiour :  MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        luaBh.OnUpdate();
+        luaBh.OnUpdate(Time.realtimeSinceStartup);
     }
 
     void OnDestroy()

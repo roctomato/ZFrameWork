@@ -88,6 +88,13 @@ public class LuaBehaviour
             luaUpdate.Call( scriptEnv );
         }
     }
+    public void OnUpdate(float stamp)
+    {
+        if (luaUpdate != null)
+        {
+            luaUpdate.Call(scriptEnv, stamp);
+        }
+    }
     public void OnDestroy()
     {
         if (luaOnDestroy != null)

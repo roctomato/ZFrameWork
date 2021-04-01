@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-
+using UnityEngine.Events;
 
 namespace Zby
 {
@@ -79,7 +79,6 @@ namespace Zby
         public virtual void ViewEvtHandler(object sender, string event_cate, int event_type,object param) { } //事件侦听
         public virtual CnUiComponent GetCnUiComponent() { return null; }
     }
-
     public class UiEventListener : UnityEngine.EventSystems.EventTrigger
     {
         public delegate void VoidDelegate(GameObject go);
@@ -124,6 +123,52 @@ namespace Zby
         public override void OnUpdateSelected(BaseEventData eventData)
         {
             if (onUpdateSelect != null) onUpdateSelect(gameObject);
+        }
+    }
+    public class UiEventListenerEx : UnityEngine.EventSystems.EventTrigger
+    {
+        //public delegate void VoidDelegate(GameObject go);
+        public UnityAction onClick;
+        public UnityAction onDown;
+        public UnityAction onEnter;
+        public UnityAction onExit;
+        public UnityAction onUp;
+        public UnityAction onSelect;
+        public UnityAction onUpdateSelect;
+
+        public static UiEventListenerEx Get(GameObject go)
+        {
+            UiEventListenerEx listener = go.GetComponent<UiEventListenerEx>();
+            if (listener == null) listener = go.AddComponent<UiEventListenerEx>();
+            return listener;
+        }
+        public override void OnPointerClick(PointerEventData eventData)
+        {
+            if (onClick != null) onClick();
+        }
+        public override void OnPointerDown(PointerEventData eventData)
+        {
+            if (onDown != null) onDown();
+        }
+        public override void OnPointerEnter(PointerEventData eventData)
+        {
+            if (onEnter != null) onEnter();
+        }
+        public override void OnPointerExit(PointerEventData eventData)
+        {
+            if (onExit != null) onExit();
+        }
+        public override void OnPointerUp(PointerEventData eventData)
+        {
+            if (onUp != null) onUp();
+        }
+        public override void OnSelect(BaseEventData eventData)
+        {
+            if (onSelect != null) onSelect();
+        }
+        public override void OnUpdateSelected(BaseEventData eventData)
+        {
+            if (onUpdateSelect != null) onUpdateSelect();
         }
     }
 }

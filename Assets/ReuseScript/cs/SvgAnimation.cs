@@ -46,15 +46,26 @@ public class SvgAnimation : MonoBehaviour
         img = sr;
         img.useSpriteMesh = true;
     }
-
     public bool SetPath(string path)
     {
         return  shHanz.LoadFromPath(path);
     }
 
+    public bool LoadFromTextAsset(string path)
+    {
+        return shHanz.LoadTextAsset(path);
+    }
     public void ShowPath(int index)
     {
         shHanz.ShowBihua(index);
+    }
+    public void SetAllColor(Color cl)
+    {
+        shHanz.ShowAllColor(cl);
+    }
+    public void ShowBihua(int index, Color clr)
+    {
+        shHanz.ShowBihua(index, clr);
     }
 
     void Show(Sprite sp)

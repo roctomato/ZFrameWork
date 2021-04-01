@@ -9,7 +9,12 @@ public class ShowHanz
     protected WrapHanzSvg wrpsvg;
     protected Sprite      sprite;
     protected VectorUtils.TessellationOptions tessOptions;
+    int _initPathCount;
 
+    public int PathCount
+    {
+        get { return _initPathCount; }
+    }
     public ShowHanz()
     {
         wrpsvg = new WrapHanzSvg();
@@ -31,7 +36,10 @@ public class ShowHanz
         sprite = wrpsvg.BuildSprite( 100.0f, VectorUtils.Alignment.Center, Vector2.zero, 32, true);
         return sprite;
     }
-
+    public void FillMesh(Mesh mesh)
+    {
+        wrpsvg.FillMesh(mesh, 100.0f, true);
+    }
     public bool LoadFromPath(string path)
     {
         bool ret = false;
@@ -44,13 +52,51 @@ public class ShowHanz
                 break;
             }
             wrpsvg.BuildGeoms(tessOptions);
+            _initPathCount = wrpsvg._geoms.Count;
+            ret = true;
+        } while (false);
+        return ret;
+    }
+    public bool LoadTextAsset(string path)
+    {
+        bool ret = false;
+       
+        do
+        {
+            TextAsset ta = Resources.Load<TextAsset>(path);
+            if ( ta == null)
+            {
+                Debug.LogError(string.Format("load svg asset file {0} err", path));
+                break;
+            }
+            StringReader reader = new StringReader(ta.text);
+            if (!wrpsvg.ImportSVG(reader))
+            {
+                Debug.LogError(string.Format("laod svg file {0} err", path));
+                break;
+            }
+            wrpsvg.BuildGeoms(tessOptions);
+            _initPathCount = wrpsvg._geoms.Count;
             ret = true;
         } while (false);
         return ret;
     }
     public void ShowBihua(int index)
     {
-        wrpsvg.SetPathColor(index, Color.blue);
+        ShowBihua(index, Color.blue);
+    }
+
+    public void ShowBihua(int index, Color clr)
+    {
+        wrpsvg.SetPathColor(index, clr);
+    }
+
+    public void ShowAllColor( Color clr)
+    {
+        foreach(var geo in wrpsvg._geoms)
+        {
+            geo.Color = clr;
+        }
     }
 }
 

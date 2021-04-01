@@ -5,6 +5,7 @@ using System.Linq;
 
 
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace Zby
 {
@@ -29,7 +30,7 @@ namespace Zby
             foreach (CnPanelObj p in _viewStack) 
             { 
             　　 if  (p != null){
-                    GameObject.DestroyImmediate(p.UIObj);
+                    GameObject.Destroy(p.UIObj);
                 }
             } 
             this._viewStack.Clear();
@@ -37,7 +38,7 @@ namespace Zby
             foreach (CnPanelObj p in _initViewSet) 
             { 
             　　 if  (p != null){
-                    GameObject.DestroyImmediate(p.UIObj);
+                    GameObject.Destroy(p.UIObj);
                 }
             } 
             this._initViewSet.Clear();
@@ -235,7 +236,7 @@ namespace Zby
                 if (next != null)
                     next.DoBring2Top(view);
             }
-            GameObject.DestroyImmediate(view.UIObj);
+            GameObject.Destroy(view.UIObj);
             return true;
         }
         public bool CanUnload(CnPanelObj view)
@@ -292,6 +293,8 @@ namespace Zby
             ret = true;
             return ret;
         }
+
+       
         ///////////////////////////////////////////
 
     }

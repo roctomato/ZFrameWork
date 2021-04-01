@@ -1,9 +1,10 @@
 
 using UnityEngine;
+using UnityEngine.Events;
 using Zby;
 using XLua;
 
-
+[LuaCallCSharp]
 public class LuaObjMgr:  UIMgrBase
 {
     public LuaObjMgr(GameObject go):base(go) {
@@ -44,4 +45,28 @@ public class LuaObjMgr:  UIMgrBase
             
         return ret;
     }
-} 
+
+    public  Sprite ResourcesSprite(string path)
+    {
+        return Resources.Load<Sprite>(path);
+    }
+
+   
+}
+[LuaCallCSharp] 
+public class LuaUIEvt
+{
+    static public  void RegistClick(GameObject go, UnityAction action)
+    {
+        UiEventListenerEx.Get(go).onClick = action;
+    }
+
+    static public void RegistDown(GameObject go, UnityAction action)
+    {
+        UiEventListenerEx.Get(go).onDown = action;
+    }
+    static public void RegistUp(GameObject go, UnityAction action)
+    {
+        UiEventListenerEx.Get(go).onUp = action;
+    }
+}

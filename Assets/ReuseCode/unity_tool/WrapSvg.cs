@@ -139,6 +139,13 @@ public class WrapHanzSvg
     {
         return VectorUtils.BuildSprite(_geoms, svgPixelsPerUnit, alignment, customPivot, gradientResolution, flipYAxis);
     }
+    public  void FillMesh(
+       Mesh mesh,               // The mesh to fill, which will be cleared before filling
+       float svgPixelsPerUnit,  // How many "SVG units" should fit in a "Unity unit"
+       bool flipYAxis = false) // If true, the Y-axis will point downward
+    {
+        VectorUtils.FillMesh(mesh, _geoms, svgPixelsPerUnit, flipYAxis);
+    }
     public void Reset(List<float> list_initValue)
     {
         for(int i = 0; i < list_initValue.Count; i ++)
