@@ -436,6 +436,7 @@ public class ScrollView : ScrollRect
         if (resetPosition)
         {
             JumpToStart(0);
+#if UNITY_2018
             if (horizontal == true)
             {
                 this.content.anchoredPosition = new Vector2(softnessClip.x, 0);
@@ -444,6 +445,7 @@ public class ScrollView : ScrollRect
             {
                 this.content.anchoredPosition = new Vector2(0, -softnessClip.y);
             }
+#endif
             //this.content.anchoredPosition = Vector2.zero;
             //JumpToStart(0);
         }
